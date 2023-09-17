@@ -24,6 +24,7 @@ const Purchase = () => {
   };
 
   
+
   const getUser = async () => {
 	try {
 	  if (!auth.token) return;
