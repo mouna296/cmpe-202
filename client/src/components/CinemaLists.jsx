@@ -159,6 +159,7 @@ const CinemaLists = ({
 				{...register("search")}
 			  />
 			</div>
+			
 			{isFetchingCinemas ? (
 			  <Loading />
 			) : (
