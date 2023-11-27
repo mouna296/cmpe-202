@@ -92,7 +92,7 @@ exports.getMe = async (req, res, next) => {
 //@access	Private
 exports.getTickets = async (req, res, next) => {
 	try {
-		const user = await User.findById(req.user.id, { tickets: 1 }).populate({
+		const user = await User.findById(req.user.id, { tickets: 1, rewardPoints: 1}).populate({
 			path: 'tickets.showtime',
 			populate: [
 				'movie',

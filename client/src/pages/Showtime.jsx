@@ -157,13 +157,15 @@ const Showtime = () => {
 																seat={{ row: rowLetter, number: col }}
 																setSelectedSeats={setSelectedSeats}
 																selectable={!isPast}
+																selectedSeats={selectedSeats}
 																isAvailable={
-																	!showtime.seats.find(
+																	 !showtime.seats.find(
 																		(seat) =>
 																			seat.row === rowLetter &&
 																			seat.number === col
-																	)
+																	) 
 																}
+																isLimitExceeded={(selectedSeats.length>7)}
 															/>
 														)
 													})}

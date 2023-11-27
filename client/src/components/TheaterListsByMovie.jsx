@@ -42,9 +42,12 @@ const TheaterListsByMovie = ({
         response = await axios.get("/cinema");
       }
       console.log(response.data.data);
-	  const filteredCinemas = response.data.data.filter(
-		(cinema) => cinema.location === selectedLocation
-	  );  
+      let filteredCinemas = response.data.data;
+      if (selectedLocation !== null) {
+        filteredCinemas = response.data.data.filter(
+          (cinema) => cinema.location === selectedLocation
+        );
+      }  
 	  console.log(filteredCinemas);
 	  setCinemas(filteredCinemas);
     } catch (error) {
