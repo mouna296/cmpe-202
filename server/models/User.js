@@ -22,6 +22,11 @@ const userSchema = new mongoose.Schema({
 		enum: ['user', 'admin'],
 		defalut: 'user'
 	},
+	membership: {
+		type: String,
+		enum: ['Regular', 'Premium'],
+		default: 'Regular',
+	  },
 	password: {
 		type: String,
 		required: [true, 'Please add a password'],
@@ -39,6 +44,10 @@ const userSchema = new mongoose.Schema({
 			]
 		}
 	],
+	rewardPoints: {
+		type: Number,
+		default: 0
+	  },
 	rewardPoints: {
 		type: Number,
 		default: 0

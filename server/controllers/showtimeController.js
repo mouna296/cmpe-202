@@ -2,6 +2,9 @@ const Movie = require('../models/Movie')
 const Showtime = require('../models/Showtime')
 const Theater = require('../models/Theater')
 const User = require('../models/User')
+const SEAT_PRICE = 20;
+const MAX_TICKETS_PER_PURCHASE=8;
+const SERVICE_FEE=1.50;
 
 //@desc     GET showtimes
 //@route    GET /showtime
@@ -142,63 +145,126 @@ exports.addShowtime = async (req, res, next) => {
 //@route    POST /showtime/:id
 //@access   Private
 exports.purchase = async (req, res, next) => {
-	try {
-		const { seats } = req.body
-		const user = req.user
+    try {
+      const { seats, useRewardPoints } = req.body;
+      const user = req.user;
+	  const isPremiumUser = user.membership === 'Premium'; // assuming userType is a field in your User model
 
-		const showtime = await Showtime.findById(req.params.id).populate({ path: 'theater', select: 'seatPlan' })
+      // Check if the number of seats exceeds the limit
+      if (seats.length > MAX_TICKETS_PER_PURCHASE) {
+        return res.status(400).json({
+          success: false,
+          message: `You can only purchase up to ${MAX_TICKETS_PER_PURCHASE} tickets at a time.`
+        })
+      }
+  
+      const showtime = await Showtime.findById(req.params.id).populate({
+        path: 'theater',
+        select: 'seatPlan'
+      })
+  
+      if (!showtime) {
+        return res
+          .status(400)
+          .json({ success: false, message: `Showtime not found with id of ${req.params.id}` })
+      }
+  
+      const isSeatValid = seats.every((seatNumber) => {
+        const [row, number] = seatNumber.match(/([A-Za-z]+)(\d+)/).slice(1)
+        const maxRow = showtime.theater.seatPlan.row
+        const maxCol = showtime.theater.seatPlan.column
+  
+        if (maxRow.length !== row.length) {
+          return maxRow.length > row.length
+        }
+  
+        return maxRow.localeCompare(row) >= 0 && number <= maxCol
+      })
+  
+      if (!isSeatValid) {
+        return res.status(400).json({ success: false, message: 'Seat is not valid' })
+      }
+  
+      const isSeatAvailable = seats.every((seatNumber) => {
+        const [row, number] = seatNumber.match(/([A-Za-z]+)(\d+)/).slice(1)
+        return !showtime.seats.some((seat) => seat.row === row && seat.number === parseInt(number, 10))
+      })
+  
+      if (!isSeatAvailable) {
+        return res.status(400).json({ success: false, message: 'Seat not available' })
+      }
+  
+      console.log('flag:!!',useRewardPoints )
+	  const purchaseAmount = isPremiumUser ? seats.length * SEAT_PRICE : seats.length * (SEAT_PRICE + SERVICE_FEE);
+	  let rewardPointsEarned;
 
-		if (!showtime) {
-			return res.status(400).json({ success: false, message: `Showtime not found with id of ${req.params.id}` })
-		}
+      // If useRewardPoints is true, calculate and deduct reward points
+      if (useRewardPoints) {
+         const rewardPointsRequired = purchaseAmount
+  
+        // Check if the user has enough reward points
+        if (user.rewardPoints < rewardPointsRequired) {
+          return res
+            .status(400)
+            .json({ success: false, message: 'Not enough reward points to make the purchase' })
+        }
+  
+        // Deduct reward points from the user
+		user.rewardPoints -= rewardPointsRequired;
+  		rewardPointsEarned = -rewardPointsRequired;
+		console.log('payment by points',user.rewardPoints)
 
-		const isSeatValid = seats.every((seatNumber) => {
-			const [row, number] = seatNumber.match(/([A-Za-z]+)(\d+)/).slice(1)
-			const maxRow = showtime.theater.seatPlan.row
-			const maxCol = showtime.theater.seatPlan.column
+      } else {
+        // If useRewardPoints is false, calculate reward points and increment
+         const rewardPointsFetched= purchaseAmount
+  
+        // Update user's reward points
+        user.rewardPoints += rewardPointsFetched
+		rewardPointsEarned = +rewardPointsFetched;
 
-			if (maxRow.length !== row.length) {
-				return maxRow.length > row.length
-			}
+		console.log('payment by cash',user.rewardPoints)
+      }
+	  //await user.save()
+	  //console.log('reward points',rewardPointsRequired)
+	  //console.log('rewardPointsEarned',rewardPointsEarned)
+      const seatUpdates = seats.map((seatNumber) => {
+        const [row, number] = seatNumber.match(/([A-Za-z]+)(\d+)/).slice(1)
+        return { row, number: parseInt(number, 10), user: user._id }
+      })
+  
+      showtime.seats.push(...seatUpdates)
+      const updatedShowtime = await showtime.save()
+  
+      // Save the updated user to the database
+      const updatedUser = await User.findByIdAndUpdate(
+        user._id,
+        {
+          $push: { tickets: { showtime, seats: seatUpdates } },
+		  $inc: { rewardPoints: rewardPointsEarned }
 
-			return maxRow.localeCompare(row) >= 0 && number <= maxCol
-		})
-
-		if (!isSeatValid) {
-			return res.status(400).json({ success: false, message: 'Seat is not valid' })
-		}
-
-		const isSeatAvailable = seats.every((seatNumber) => {
-			const [row, number] = seatNumber.match(/([A-Za-z]+)(\d+)/).slice(1)
-			return !showtime.seats.some((seat) => seat.row === row && seat.number === parseInt(number, 10))
-		})
-
-		if (!isSeatAvailable) {
-			return res.status(400).json({ success: false, message: 'Seat not available' })
-		}
-
-		const seatUpdates = seats.map((seatNumber) => {
-			const [row, number] = seatNumber.match(/([A-Za-z]+)(\d+)/).slice(1)
-			return { row, number: parseInt(number, 10), user: user._id }
-		})
-
-		showtime.seats.push(...seatUpdates)
-		const updatedShowtime = await showtime.save()
-
-		const updatedUser = await User.findByIdAndUpdate(
-			user._id,
-			{
-				$push: { tickets: { showtime, seats: seatUpdates } }
-			},
-			{ new: true }
-		)
-
-		res.status(200).json({ success: true, data: updatedShowtime, updatedUser })
-	} catch (err) {
-		console.log(err)
-		res.status(400).json({ success: false, message: err })
-	}
-}
+        },
+        { new: true }
+      )
+	  const query = User.updateMany(
+		{ 'tickets.showtime': showtime, 'tickets.seats': seatUpdates },
+		{
+		  $pull: { tickets: { showtime, seats: seatUpdates } }
+		},
+		{ new: true }
+	  )
+	  
+	  const result = await query.exec();
+	  
+	  console.log('Update Result:', result);
+	  //console.log('user deletion :', deletedTicket)
+  
+      res.status(200).json({ success: true, data: updatedShowtime, updatedUser })
+      console.log('user rewards', updatedUser.rewardPoints)
+    } catch (err) {
+      console.log(err)
+      res.status(400).json({ success: false, message: err.message })
+    }
+  }
 
 //@desc     Update showtime
 //@route    PUT /showtime/:id

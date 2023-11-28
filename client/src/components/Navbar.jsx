@@ -78,7 +78,7 @@ const Navbar = () => {
                 : "bg-gray-600"
             }`}
           >
-            <HomeModernIcon className="h-6 w-6" />
+            {/* <HomeModernIcon className="h-6 w-6" /> */}
             <p>Cinema</p>
           </Link>
           <Link
@@ -89,7 +89,7 @@ const Navbar = () => {
                 : "bg-gray-600"
             }`}
           >
-            <ClockIcon className="h-6 w-6" />
+            {/* <ClockIcon className="h-6 w-6" /> */}
             <p>Schedule</p>
           </Link>
           {auth.role && (
@@ -101,7 +101,7 @@ const Navbar = () => {
                   : "bg-gray-600"
               }`}
             >
-              <TicketIcon className="h-6 w-6" />
+              {/* <TicketIcon className="h-6 w-6" /> */}
               <p>Ticket</p>
             </Link>
           )}
@@ -115,7 +115,7 @@ const Navbar = () => {
                     : "bg-gray-600"
                 }`}
               >
-                <VideoCameraIcon className="h-6 w-6" />
+                {/* <VideoCameraIcon className="h-6 w-6" /> */}
                 <p>Movie</p>
               </Link>
               <Link
@@ -126,7 +126,7 @@ const Navbar = () => {
                     : "bg-gray-600"
                 }`}
               >
-                <MagnifyingGlassIcon className="h-6 w-6" />
+                {/* <MagnifyingGlassIcon className="h-6 w-6" /> */}
                 <p>Search</p>
               </Link>
               <Link
@@ -137,7 +137,7 @@ const Navbar = () => {
                     : "bg-gray-600"
                 }`}
               >
-                <UsersIcon className="h-6 w-6" />
+                {/* <UsersIcon className="h-6 w-6" /> */}
                 <p>User</p>
               </Link>
             </>
