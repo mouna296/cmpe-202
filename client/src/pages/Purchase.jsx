@@ -69,11 +69,11 @@ const Purchase = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col gap-4 bg-gradient-to-br from-indigo-900 to-blue-500 pb-8 sm:gap-8">
+    <div className="flex min-h-screen flex-col gap-4 bg-gradient-to-br pb-8 sm:gap-8">
       <Navbar />
-      <div className="mx-4 h-fit rounded-lg bg-gradient-to-br from-indigo-200 to-blue-100 p-4 drop-shadow-xl sm:mx-8 sm:p-6">
+      <div className="mx-4 h-fit rounded-lg bg-gradient-to-br from-red-200 to-red-100 p-4 drop-shadow-xl sm:mx-8 sm:p-6">
         <ShowtimeDetails showtime={showtime} />
-        <div className="flex flex-col justify-between rounded-b-lg bg-gradient-to-br from-indigo-100 to-white text-center text-lg drop-shadow-lg md:flex-row">
+        <div className="flex flex-col justify-between rounded-b-lg bg-gradient-to-br from-red-100 to-white text-center text-lg drop-shadow-lg md:flex-row">
           <div className="flex flex-col items-center gap-x-4 px-4 py-2 md:flex-row">
             <p className="font-semibold">Selected Seats:</p>
             <p className="text-start">{selectedSeats.join(", ")}</p>
@@ -86,7 +86,7 @@ const Purchase = () => {
           <div className="flex flex-col items-center gap-x-4 px-4 py-2 md:flex-row justify-end ml-auto">
             <div className="flex flex-col md:flex-row gap-4">
               <p className="font-semibold flex items-center justify-end gap-2 rounded-b-lg">
-                <label className=" items-center gap-2 rounded-b-lg px-4 py-1 bg-gradient-to-br from-blue-600 to-blue-500 font-semibold text-white md:rounded-none md:rounded-br-lg">
+                <label className=" items-center gap-2 rounded-b-lg px-4 py-1 bg-gradient-to-br from-red-600 to-red-500 font-semibold text-white md:rounded-none md:rounded-br-lg">
                   <div>Tickets Price: ${selectedSeats.length * 20}</div>
 				  <div>Service Fee{(membership === "Premium") ? "$0" : "($1.5/Ticket): $"+(selectedSeats.length * 1.5)}</div>
 				  <div>Total: ${(membership === "Premium") ? (selectedSeats.length * 20) : (selectedSeats.length * 21.5)}</div>
@@ -100,7 +100,7 @@ const Purchase = () => {
         <div className="flex flex-col items-center gap-x-4 px-4 py-2 md:flex-row justify-end">
           {selectedSeats.length > 0 && (
             <div className="flex flex-col md:flex-row gap-4">
-              <label className="flex items-center gap-2 rounded-b-lg px-4 py-1 bg-gradient-to-br from-red-600 to-red-500 font-semibold text-white hover:from-indigo-500 hover:to-blue-500 disabled:from-slate-500 disabled:to-slate-400 md:rounded-none md:rounded-br-lg">
+              <label className="flex items-center gap-2 rounded-b-lg px-4 py-1 bg-gradient-to-br from-red-600 to-red-500 font-semibold text-white hover:from-red-500 disabled:from-slate-500 disabled:to-slate-400 md:rounded-none md:rounded-br-lg">
                 <input
                   type="checkbox"
                   checked={useRewardPoints}
@@ -121,7 +121,7 @@ const Purchase = () => {
             <div className="flex flex-col md:flex-row gap-4">
               <button
                 onClick={() => onPurchase()}
-                className="flex items-center justify-center gap-2 rounded-b-lg  bg-gradient-to-br from-indigo-600 to-blue-500 px-4 py-1 font-semibold text-white hover:from-indigo-500 hover:to-blue-500 disabled:from-slate-500 disabled:to-slate-400 md:rounded-none md:rounded-br-lg"
+                className="flex items-center justify-center gap-2 rounded-b-lg  bg-gradient-to-br from-red-600 to-red-500 px-4 py-1 font-semibold text-white hover:from-red-500 hover:to-red-500 disabled:from-slate-500 disabled:to-slate-400 md:rounded-none md:rounded-br-lg"
                 disabled={isPurchasing}
               >
                 {isPurchasing ? "Processing..." : "Confirm Purchase"}

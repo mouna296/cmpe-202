@@ -62,7 +62,7 @@ const Home = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col gap-4 bg-gradient-to-br from-indigo-900 to-blue-500 pb-8 sm:gap-8">
+    <div className="flex min-h-screen flex-col gap-4 bg-gradient-to-br pb-8 sm:gap-8">
       <Navbar />
 	  {selectedLocation === null && (
 	  <Modal

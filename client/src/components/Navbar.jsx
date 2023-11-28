@@ -71,13 +71,13 @@ const Navbar = () => {
     return (
       <>
         <div className="flex flex-col gap-2 lg:flex-row">
-        {auth.role === "admin" && (
+        
           <>
           <Link
             to={"/cinema"}
             className={`flex items-center justify-center gap-2 rounded-md px-2 py-1 text-white hover:bg-gray-500 ${
               window.location.pathname === "/cinema"
-                ? "bg-gradient-to-br from-indigo-800 to-blue-700"
+                ? "bg-gradient-to-br from-red-800 to-red-700"
                 : "bg-gray-600"
             }`}
           >
@@ -85,28 +85,24 @@ const Navbar = () => {
             <p>Cinema</p>
           </Link>
           </>
-        )}
-        {auth.role === "admin" && (
-          <>
+        
           <Link
             to={"/schedule"}
             className={`flex items-center justify-center gap-2 rounded-md px-2 py-1 text-white hover:bg-gray-500 ${
               window.location.pathname === "/schedule"
-                ? "bg-gradient-to-br from-indigo-800 to-blue-700"
+                ? "bg-gradient-to-br from-red-800 to-red-700"
                 : "bg-gray-600"
             }`}
           >
             <ClockIcon className="h-6 w-6" />
             <p>Schedule</p>
           </Link>
-          </>
-        )}
           {auth.role && (
             <Link
               to={"/ticket"}
               className={`flex items-center justify-center gap-2 rounded-md px-2 py-1 text-white hover:bg-gray-500 ${
                 window.location.pathname === "/ticket"
-                  ? "bg-gradient-to-br from-indigo-800 to-blue-700"
+                  ? "bg-gradient-to-br from-red-800 to-red-700"
                   : "bg-gray-600"
               }`}
             >
@@ -120,7 +116,7 @@ const Navbar = () => {
                 to={"/movie"}
                 className={`flex items-center justify-center gap-2 rounded-md px-2 py-1 text-white hover:bg-gray-500 ${
                   window.location.pathname === "/movie"
-                    ? "bg-gradient-to-br from-indigo-800 to-blue-700"
+                    ? "bg-gradient-to-br from-red-800 to-red-700"
                     : "bg-gray-600"
                 }`}
               >
@@ -131,7 +127,7 @@ const Navbar = () => {
                 to={"/search"}
                 className={`flex items-center justify-center gap-2 rounded-md px-2 py-1 text-white hover:bg-gray-500 ${
                   window.location.pathname === "/search"
-                    ? "bg-gradient-to-br from-indigo-800 to-blue-700"
+                    ? "bg-gradient-to-br from-red-800 to-red-700"
                     : "bg-gray-600"
                 }`}
               >
@@ -142,13 +138,24 @@ const Navbar = () => {
                 to={"/user"}
                 className={`flex items-center justify-center gap-2 rounded-md px-2 py-1 text-white hover:bg-gray-500 ${
                   window.location.pathname === "/user"
-                    ? "bg-gradient-to-br from-indigo-800 to-blue-700"
+                    ? "bg-gradient-to-br from-red-800 to-red-700"
                     : "bg-gray-600"
                 }`}
               >
                 <UsersIcon className="h-6 w-6" />
                 <p>User</p>
               </Link>
+              <Link
+								to={'/dashboard'}
+								className={`flex items-center justify-center gap-2 rounded-md px-2 py-1 text-white hover:bg-gray-500 ${
+									window.location.pathname === '/dashboard'
+										? 'bg-gradient-to-br from-red-800 to-red-700'
+										: 'bg-gray-600'
+								}`}
+							>
+								<ChartBarIcon className="h-6 w-6" />
+								<p>Dashboard</p>
+							</Link>
             </>
           )}
         </div>
@@ -209,14 +216,14 @@ const Navbar = () => {
           )}
           {auth.token ? (
             <button
-              className="rounded-lg bg-gradient-to-br from-indigo-600 to-blue-500 px-2 py-1 text-white drop-shadow-md hover:from-indigo-500 hover:to-blue-400 disabled:from-slate-500 disabled:to-slate-400"
+              className="rounded-lg bg-gradient-to-br from-red-600 px-2 py-1 text-white drop-shadow-md hover:from-red-500 hover:to-red-400 disabled:from-slate-500 disabled:to-slate-400"
               onClick={() => onLogout()}
               disabled={isLoggingOut}
             >
               {isLoggingOut ? "Processing..." : "Logout"}
             </button>
           ) : (
-            <button className="rounded-lg bg-gradient-to-br from-indigo-600 to-blue-500 px-2 py-1 text-white drop-shadow-md hover:from-indigo-500 hover:to-blue-400">
+            <button className="rounded-lg bg-gradient-to-br from-red-600 px-2 py-1 text-white drop-shadow-md hover:from-red-500 hover:to-red-400">
               <Link to={"/login"}>Login</Link>
             </button>
           )}
