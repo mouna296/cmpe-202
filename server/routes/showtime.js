@@ -23,6 +23,7 @@ router
 router.route('/unreleased').get(protect, authorize('admin'), getUnreleasedShowtimes)
 router.route('/previous').delete(protect, authorize('admin'), deletePreviousShowtime)
 router.route('/user/:id').get(protect, authorize('admin'), getShowtimeWithUser)
+router.route('/')
 router
 	.route('/:id')
 	.get(getShowtime)

@@ -5,14 +5,20 @@ const User = require('../models/User')
 //@access  Public
 exports.register = async (req, res, next) => {
 	try {
-		const { username, email, password, role = 'user' } = req.body
+		const { username, email, password, role = 'user', membership  } = req.body
+
+		const validMemberships = ['Regular', 'Premium'];
+	  if (membership && !validMemberships.includes(membership)) {
+		return res.status(400).json({ success: false, message: 'Invalid membership type' });
+	  }
 
 		//Create user
 		const user = await User.create({
 			username,
 			email,
 			password,
-			role
+			role,
+			membership
 		})
 
 		sendTokenResponse(user, 200, res)
@@ -92,7 +98,7 @@ exports.getMe = async (req, res, next) => {
 //@access	Private
 exports.getTickets = async (req, res, next) => {
 	try {
-		const user = await User.findById(req.user.id, { tickets: 1, rewardPoints: 1}).populate({
+		const user = await User.findById(req.user.id, { tickets: 1, rewardPoints: 1, membership: 1}).populate({
 			path: 'tickets.showtime',
 			populate: [
 				'movie',

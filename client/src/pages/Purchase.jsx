@@ -1,11 +1,11 @@
-import { TicketIcon } from '@heroicons/react/24/solid';
-import axios from 'axios';
-import { useContext, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import Navbar from '../components/Navbar';
-import ShowtimeDetails from '../components/ShowtimeDetails';
-import { AuthContext } from '../context/AuthContext';
+import { TicketIcon } from "@heroicons/react/24/solid";
+import axios from "axios";
+import { useContext, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import Navbar from "../components/Navbar";
+import ShowtimeDetails from "../components/ShowtimeDetails";
+import { AuthContext } from "../context/AuthContext";
 
 const Purchase = () => {
   const navigate = useNavigate();
@@ -13,11 +13,32 @@ const Purchase = () => {
   const location = useLocation();
   const showtime = location.state.showtime;
   const selectedSeats = location.state.selectedSeats || [];
-  const [isPurchasing, setIsPurchasing] = useState(false);
+  const [isPurchasing, SetIsPurchasing] = useState(false);
   const [useRewardPoints, setUseRewardPoints] = useState(false);
+  const [rewardPoints, setRewardPoints] = useState(0);
+  const [membership, setMembership] = useState("");
 
-  const onPurchase = async () => {
-    setIsPurchasing(true);
+  const getUser = async () => {
+	try {
+	  if (!auth.token) return;
+
+	  const response = await axios.get('/auth/me', {
+		headers: {
+		  Authorization: `Bearer ${auth.token}`,
+		},
+	  });
+	  setRewardPoints(response.data.data.rewardPoints);
+	  setMembership(response.data.data.membership);
+	} catch (error) {
+	  console.error(error);
+	}
+  };
+
+  
+  getUser(); 
+
+  const onPurchase = async (data) => {
+    SetIsPurchasing(true);
     try {
       const response = await axios.post(
         `/showtime/${showtime._id}`,
@@ -27,23 +48,23 @@ const Purchase = () => {
             Authorization: `Bearer ${auth.token}`,
           },
         }
-      )
+      );
       // console.log(response.data)
-      navigate('/cinema');
-      toast.success('Purchase seats successful!', {
-        position: 'top-center',
+      navigate("/cinema");
+      toast.success("Purchase seats successful!", {
+        position: "top-center",
         autoClose: 2000,
-        pauseOnHover: false
-      })
+        pauseOnHover: false,
+      });
     } catch (error) {
       console.error(error);
-      toast.error(error.response.data.message || 'Error', {
-        position: 'top-center',
+      toast.error(error.response.data.message || "Error", {
+        position: "top-center",
         autoClose: 2000,
-        pauseOnHover: false
-      })
+        pauseOnHover: false,
+      });
     } finally {
-      setIsPurchasing(false)
+      SetIsPurchasing(false);
     }
   };
 
@@ -54,40 +75,59 @@ const Purchase = () => {
         <ShowtimeDetails showtime={showtime} />
         <div className="flex flex-col justify-between rounded-b-lg bg-gradient-to-br from-indigo-100 to-white text-center text-lg drop-shadow-lg md:flex-row">
           <div className="flex flex-col items-center gap-x-4 px-4 py-2 md:flex-row">
-            <p className="font-semibold">Selected Seats : </p>
-            <p className="text-start">{selectedSeats.join(', ')}</p>
+            <p className="font-semibold">Selected Seats:</p>
+            <p className="text-start">{selectedSeats.join(", ")}</p>
             {!!selectedSeats.length && (
-              <p className="whitespace-nowrap">({selectedSeats.length} seats)</p>
+              <p className="whitespace-nowrap">
+                ({selectedSeats.length} seats)
+              </p>
             )}
           </div>
-          {!!selectedSeats.length && (
-            <>
+          <div className="flex flex-col items-center gap-x-4 px-4 py-2 md:flex-row justify-end ml-auto">
+            <div className="flex flex-col md:flex-row gap-4">
+              <p className="font-semibold flex items-center justify-end gap-2 rounded-b-lg">
+                <label className=" items-center gap-2 rounded-b-lg px-4 py-1 bg-gradient-to-br from-blue-600 to-blue-500 font-semibold text-white md:rounded-none md:rounded-br-lg">
+                  <div>Tickets Price: ${selectedSeats.length * 20}</div>
+				  <div>Service Fee{(membership === "Premium") ? "$0" : "($1.5/Ticket): $"+(selectedSeats.length * 1.5)}</div>
+				  <div>Total: ${(membership === "Premium") ? (selectedSeats.length * 20) : (selectedSeats.length * 21.5)}</div>
+                </label>
+				
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center gap-x-4 px-4 py-2 md:flex-row justify-end">
+          {selectedSeats.length > 0 && (
+            <div className="flex flex-col md:flex-row gap-4">
+              <label className="flex items-center gap-2 rounded-b-lg px-4 py-1 bg-gradient-to-br from-red-600 to-red-500 font-semibold text-white hover:from-indigo-500 hover:to-blue-500 disabled:from-slate-500 disabled:to-slate-400 md:rounded-none md:rounded-br-lg">
+                <input
+                  type="checkbox"
+                  checked={useRewardPoints}
+                  onChange={() => setUseRewardPoints(!useRewardPoints)}
+                  disabled={isPurchasing}
+                />
+                <div>
+                  {useRewardPoints
+                    ? "Cancel Reward Points"
+                    : "Use Reward Points? Remaining points: $"+rewardPoints}
+                </div>
+              </label>
+            </div>
+          )}
+        </div>
+        <div className="flex flex-col items-center gap-x-4 px-4 py-2 md:flex-row justify-end">
+          {selectedSeats.length > 0 && (
+            <div className="flex flex-col md:flex-row gap-4">
               <button
-                onClick={() => setUseRewardPoints(!useRewardPoints)}
-                className={`flex items-center justify-center gap-2 rounded-b-lg ${
-                  useRewardPoints
-                    ? 'bg-gradient-to-br from-yellow-400 to-yellow-500'
-                    : 'bg-gradient-to-br from-indigo-600 to-blue-500'
-                } px-4 py-1 font-semibold text-white hover:from-indigo-500 hover:to-blue-500 disabled:from-slate-500 disabled:to-slate-400 md:rounded-none md:rounded-br-lg`}
+                onClick={() => onPurchase()}
+                className="flex items-center justify-center gap-2 rounded-b-lg  bg-gradient-to-br from-indigo-600 to-blue-500 px-4 py-1 font-semibold text-white hover:from-indigo-500 hover:to-blue-500 disabled:from-slate-500 disabled:to-slate-400 md:rounded-none md:rounded-br-lg"
                 disabled={isPurchasing}
               >
-                {useRewardPoints ? 'Cancel Reward Points' : 'Use Reward Points'}
+                {isPurchasing ? "Processing..." : "Confirm Purchase"}
+                <TicketIcon className="h-7 w-7 text-white" />
               </button>
-              <button
-                onClick={onPurchase}
-                className="flex items-center justify-center gap-2 rounded-b-lg bg-gradient-to-br from-indigo-600 to-blue-500 px-4 py-1 font-semibold text-white hover:from-indigo-500 hover:to-blue-500 disabled:from-slate-500 disabled:to-slate-400 md:rounded-none md:rounded-br-lg"
-                disabled={isPurchasing}
-              >
-                {isPurchasing ? (
-                  'Processing...'
-                ) : (
-                  <>
-                    <p>Confirm Purchase</p>
-                    <TicketIcon className="h-7 w-7 text-white" />
-                  </>
-                )}
-              </button>
-            </>
+            </div>
           )}
         </div>
       </div>
@@ -95,4 +135,4 @@ const Purchase = () => {
   );
 };
 
-export default Purchase
+export default Purchase;

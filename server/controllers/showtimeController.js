@@ -3,7 +3,6 @@ const Showtime = require('../models/Showtime')
 const Theater = require('../models/Theater')
 const User = require('../models/User')
 const SEAT_PRICE = 20;
-const MAX_TICKETS_PER_PURCHASE=8;
 const SERVICE_FEE=1.50;
 
 //@desc     GET showtimes
@@ -141,22 +140,18 @@ exports.addShowtime = async (req, res, next) => {
 	}
 }
 
+
+
+
 //@desc     Purchase seats
 //@route    POST /showtime/:id
 //@access   Private
+
 exports.purchase = async (req, res, next) => {
     try {
       const { seats, useRewardPoints } = req.body;
       const user = req.user;
-	  const isPremiumUser = user.membership === 'Premium'; // assuming userType is a field in your User model
-
-      // Check if the number of seats exceeds the limit
-      if (seats.length > MAX_TICKETS_PER_PURCHASE) {
-        return res.status(400).json({
-          success: false,
-          message: `You can only purchase up to ${MAX_TICKETS_PER_PURCHASE} tickets at a time.`
-        })
-      }
+	  const isPremiumUser = user.membership === 'Premium';
   
       const showtime = await Showtime.findById(req.params.id).populate({
         path: 'theater',
@@ -194,31 +189,25 @@ exports.purchase = async (req, res, next) => {
         return res.status(400).json({ success: false, message: 'Seat not available' })
       }
   
-      console.log('flag:!!',useRewardPoints )
 	  const purchaseAmount = isPremiumUser ? seats.length * SEAT_PRICE : seats.length * (SEAT_PRICE + SERVICE_FEE);
 	  let rewardPointsEarned;
 
-      // If useRewardPoints is true, calculate and deduct reward points
       if (useRewardPoints) {
          const rewardPointsRequired = purchaseAmount
   
-        // Check if the user has enough reward points
         if (user.rewardPoints < rewardPointsRequired) {
           return res
             .status(400)
             .json({ success: false, message: 'Not enough reward points to make the purchase' })
         }
   
-        // Deduct reward points from the user
 		user.rewardPoints -= rewardPointsRequired;
   		rewardPointsEarned = -rewardPointsRequired;
 		console.log('payment by points',user.rewardPoints)
 
       } else {
-        // If useRewardPoints is false, calculate reward points and increment
          const rewardPointsFetched= purchaseAmount
   
-        // Update user's reward points
         user.rewardPoints += rewardPointsFetched
 		rewardPointsEarned = +rewardPointsFetched;
 
@@ -235,7 +224,6 @@ exports.purchase = async (req, res, next) => {
       showtime.seats.push(...seatUpdates)
       const updatedShowtime = await showtime.save()
   
-      // Save the updated user to the database
       const updatedUser = await User.findByIdAndUpdate(
         user._id,
         {
@@ -245,18 +233,6 @@ exports.purchase = async (req, res, next) => {
         },
         { new: true }
       )
-	  const query = User.updateMany(
-		{ 'tickets.showtime': showtime, 'tickets.seats': seatUpdates },
-		{
-		  $pull: { tickets: { showtime, seats: seatUpdates } }
-		},
-		{ new: true }
-	  )
-	  
-	  const result = await query.exec();
-	  
-	  console.log('Update Result:', result);
-	  //console.log('user deletion :', deletedTicket)
   
       res.status(200).json({ success: true, data: updatedShowtime, updatedUser })
       console.log('user rewards', updatedUser.rewardPoints)
@@ -265,6 +241,8 @@ exports.purchase = async (req, res, next) => {
       res.status(400).json({ success: false, message: err.message })
     }
   }
+
+
 
 //@desc     Update showtime
 //@route    PUT /showtime/:id

@@ -10,6 +10,7 @@ const AuthContextProvider = ({ children }) => {
       email: null,
       role: null,
       token: null,
+      rewardPoints: null,
     }
   ); //{username, email, role, token}
 
@@ -27,12 +28,14 @@ const AuthContextProvider = ({ children }) => {
         username: response.data.data.username,
         email: response.data.data.email,
         role: response.data.data.role,
+        rewardPoints: response.data.data.rewardPoints,
       };
 
       if (
         updatedAuth.username !== auth.username ||
         updatedAuth.email !== auth.email ||
-        updatedAuth.role !== auth.role
+        updatedAuth.role !== auth.role ||
+        updatedAuth.rewardPoints !== auth.rewardPoints
       ) {
         setAuth(updatedAuth);
       }
