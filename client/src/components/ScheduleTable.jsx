@@ -81,7 +81,7 @@ const ScheduleTable = ({ cinema, selectedDate }) => {
 			<div
 				className={`grid min-h-[50vh] max-h-screen overflow-x-auto grid-cols-${cinema.theaters?.length.toString()} grid-rows-${
 					gridRows + shiftEnd
-				} rounded-md bg-gradient-to-br from-indigo-100 to-white`}
+				} rounded-md bg-gradient-to-br from-slate-100 to-white`}
 				{...events}
 				ref={ref}
 			>

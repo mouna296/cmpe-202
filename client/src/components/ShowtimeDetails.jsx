@@ -128,7 +128,7 @@ const ShowtimeDetails = ({ showDeleteBtn, showtime, fetchShowtime }) => {
 					{!showtime.isRelease && (
 						<button
 							title="Edit cinema name"
-							className="flex w-fit items-center gap-1 rounded-md bg-gradient-to-r from-indigo-600 to-blue-500  py-1 pl-2 pr-1.5 text-sm font-medium text-white hover:from-indigo-500 hover:to-blue-400 disabled:from-slate-500 disabled:to-slate-400"
+							className="flex w-fit items-center gap-1 rounded-md bg-gradient-to-r from-slate-600 to-blue-500  py-1 pl-2 pr-1.5 text-sm font-medium text-white hover:from-slate-500 hover:to-blue-400 disabled:from-slate-500 disabled:to-slate-400"
 							onClick={() => handleReleaseShowtime(true)}
 							disabled={isReleasingShowtime}
 						>
@@ -145,7 +145,7 @@ const ShowtimeDetails = ({ showDeleteBtn, showtime, fetchShowtime }) => {
 					{showtime.isRelease && (
 						<button
 							title="Edit cinema name"
-							className="flex w-fit items-center gap-1 rounded-md bg-gradient-to-r from-indigo-600 to-blue-500  py-1 pl-2 pr-1.5 text-sm font-medium text-white hover:from-indigo-500 hover:to-blue-400 disabled:from-slate-500 disabled:to-slate-400"
+							className="flex w-fit items-center gap-1 rounded-md bg-gradient-to-r from-slate-600 to-blue-500  py-1 pl-2 pr-1.5 text-sm font-medium text-white hover:from-slate-500 hover:to-blue-400 disabled:from-slate-500 disabled:to-slate-400"
 							onClick={() => handleUnreleasedShowtime(true)}
 							disabled={isUnreleasingShowtime}
 						>
@@ -180,13 +180,13 @@ const ShowtimeDetails = ({ showDeleteBtn, showtime, fetchShowtime }) => {
 					<p className="text-sm">Theater</p>
 					<p className="text-3xl">{showtime?.theater?.number}</p>
 				</div>
-				<div className="flex w-fit grow items-center justify-center rounded-tr-lg bg-gradient-to-br from-indigo-800 to-blue-700 px-4 py-0.5 text-center text-xl font-bold text-white sm:text-3xl">
+				<div className="flex w-fit grow items-center justify-center rounded-tr-lg bg-gradient-to-br from-slate-800 to-blue-700 px-4 py-0.5 text-center text-xl font-bold text-white sm:text-3xl">
 					<p className="mx-auto">{showtime?.theater?.cinema.name}</p>
 					{!showtime?.isRelease && <EyeSlashIcon className="h-8 w-8" title="Unreleased showtime" />}
 				</div>
 			</div>
 			<div className="flex flex-col md:flex-row">
-				<div className="flex grow flex-col gap-4 bg-gradient-to-br from-indigo-100 to-white py-2 drop-shadow-lg sm:py-4">
+				<div className="flex grow flex-col gap-4 bg-gradient-to-br from-slate-100 to-white py-2 drop-shadow-lg sm:py-4">
 					<div className="flex items-center">
 						<img src={showtime?.movie?.img} className="w-32 px-4 drop-shadow-md" />
 						<div className="flex flex-col">
@@ -202,7 +202,7 @@ const ShowtimeDetails = ({ showDeleteBtn, showtime, fetchShowtime }) => {
 					</div>
 				</div>
 				<div className="flex flex-col">
-					<div className="flex h-full min-w-max flex-col items-center justify-center gap-y-1 bg-gradient-to-br from-indigo-100 to-white py-2 text-center text-xl font-semibold drop-shadow-lg sm:py-4 sm:text-2xl md:items-start">
+					<div className="flex h-full min-w-max flex-col items-center justify-center gap-y-1 bg-gradient-to-br from-slate-100 to-white py-2 text-center text-xl font-semibold drop-shadow-lg sm:py-4 sm:text-2xl md:items-start">
 						<p className="mx-4 text-lg leading-4 ">
 							{showtime?.showtime &&
 								`${new Date(showtime?.showtime).toLocaleString('default', { weekday: 'long' })}`}
@@ -213,7 +213,7 @@ const ShowtimeDetails = ({ showDeleteBtn, showtime, fetchShowtime }) => {
                					 ${new Date(showtime?.showtime).toLocaleString('default', { month: 'long' })}
                 				${new Date(showtime?.showtime).getFullYear()}`}
 						</p>
-						<p className="mx-4 bg-gradient-to-r from-indigo-800 to-blue-700 bg-clip-text text-4xl font-bold text-transparent sm:text-5xl">
+						<p className="mx-4 bg-gradient-to-r from-slate-800 to-blue-700 bg-clip-text text-4xl font-bold text-transparent sm:text-5xl">
 							{showtime?.showtime &&
 								`${new Date(showtime?.showtime).getHours().toString().padStart(2, '0')} : ${new Date(
 									showtime?.showtime

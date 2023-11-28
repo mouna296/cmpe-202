@@ -163,17 +163,17 @@ const Schedule = () => {
 	}
 
 	return (
-		<div className="flex min-h-screen flex-col gap-4 bg-gradient-to-br from-indigo-900 to-blue-500 pb-8 text-gray-900 sm:gap-8">
+		<div className="flex min-h-screen flex-col gap-4 bg-gradient-to-br   pb-8 text-gray-900 sm:gap-8">
 			<Navbar />
 			<CinemaLists {...props} />
 			{selectedCinemaIndex !== null &&
 				(cinemas[selectedCinemaIndex]?.theaters?.length ? (
-					<div className="mx-4 flex flex-col gap-2 rounded-lg bg-gradient-to-br from-indigo-200 to-blue-100 p-4 drop-shadow-xl sm:mx-8 sm:gap-4 sm:p-6">
+					<div className="mx-4 flex flex-col gap-2 rounded-lg bg-slate-100 p-4 drop-shadow-xl sm:mx-8 sm:gap-4 sm:p-6">
 						<h2 className="text-3xl font-bold text-gray-900">Schedule</h2>
 						<DateSelector selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
 						{auth.role === 'admin' && (
 							<form
-								className="flex flex-col lg:flex-row gap-4 rounded-md bg-gradient-to-br from-indigo-100 to-white p-4"
+								className="flex flex-col lg:flex-row gap-4 rounded-md bg-slate-100 to-white p-4"
 								onSubmit={handleSubmit(onAddShowtime)}
 							>
 								<div className="flex grow flex-col gap-2 rounded-lg">
@@ -232,6 +232,14 @@ const Schedule = () => {
 												{...register('showtime', { required: true })}
 											/>
 										</div>
+<button
+											title="Add showtime"
+											disabled={isAddingShowtime}
+											className="hiddenwhitespace-nowrap rounded-md bg-lime-600  px-2 py-1 font-medium text-white drop-shadow-md disabled:from-slate-500 disabled:to-slate-400 lg:flex mt-7"
+											type="submit"
+										>
+											ADD +
+										</button>
 									</div>
 									<div className="flex flex-col gap-2 rounded-lg lg:flex-row lg:items-stretch">
 										<div className="flex items-center gap-x-2 gap-y-1 lg:flex-col lg:items-start">
@@ -330,7 +338,7 @@ const Schedule = () => {
 								<button
 									title="Add showtime"
 									disabled={isAddingShowtime}
-									className="whitespace-nowrap rounded-md bg-gradient-to-r from-indigo-600 to-blue-500 px-2 py-1 font-medium text-white drop-shadow-md hover:from-indigo-500 hover:to-blue-400 disabled:from-slate-500 disabled:to-slate-400"
+									className="whitespace-nowrap rounded-md bg-lime-600  px-2 py-1 font-medium text-white drop-shadow-md hover:from-red-500 hover:to-red-400 disabled:from-slate-500 disabled:to-slate-400 lg:hidden"
 									type="submit"
 								>
 									ADD +
@@ -353,7 +361,7 @@ const Schedule = () => {
 						)}
 					</div>
 				) : (
-					<div className="mx-4 flex flex-col gap-2 rounded-lg bg-gradient-to-br from-indigo-200 to-blue-100 p-4 drop-shadow-xl sm:mx-8 sm:gap-4 sm:p-6">
+					<div className="mx-4 flex flex-col gap-2 rounded-lg bg-gradient-to-br from-red-200 to-red-100 p-4 drop-shadow-xl sm:mx-8 sm:gap-4 sm:p-6">
 						<p className="text-center">There are no theaters available</p>
 					</div>
 				))}

@@ -6,6 +6,7 @@ import {
   TicketIcon,
   UsersIcon,
   VideoCameraIcon,
+  ChartBarIcon
 } from "@heroicons/react/24/outline";
 import { Bars3Icon } from "@heroicons/react/24/solid";
 import axios from "axios";
