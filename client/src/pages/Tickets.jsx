@@ -8,9 +8,14 @@ import { AuthContext } from "../context/AuthContext";
 const Tickets = () => {
   const { auth } = useContext(AuthContext);
   const [tickets, setTickets] = useState([]);
+  const [users, setUsers] = useState(null)
   const [rewardPoints, setRewardPoints] = useState(0);
   const [isFetchingticketsDone, setIsFetchingticketsDone] = useState(false);
   const [membership, setMembership] = useState("");
+  const [moviesWatched, setMoviesWatched] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+
   const fetchTickets = async () => {
     try {
       setIsFetchingticketsDone(false);
@@ -27,42 +32,61 @@ const Tickets = () => {
           return -1;
         })
       );
-	  console.log(response.data);
-	  setRewardPoints(response.data.data.rewardPoints);
-	  setMembership(response.data.data.membership);
+      setRewardPoints(response.data.data.rewardPoints);
+      setMembership(response.data.data.membership);
     } catch (error) {
       console.error(error);
     } finally {
       setIsFetchingticketsDone(true);
     }
   };
-  const handleCancelTicket = async (ticketId) => {
- 
 
+  const handleCancelTicket = async (ticketId) => {
     if (!ticketId) {
       console.error('Ticket _id is undefined');
-      // Handle the error appropriately
       return;
     }
-  
+
     try {
-      const response = await axios.delete(`/showtime/cancel/${ticketId}`, {}, 
-      {
-        headers: {
-          Authorization: `Bearer ${auth.token}`
-        }
-      });
+      const response = await axios.delete(`/showtime/cancel/${ticketId}`, {},
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`
+          }
+        });
       if (response.data.success) {
-        alert("sucess")
+        alert("Success");
         setTickets(currentTickets => currentTickets.filter(t => t._id !== ticket._id));
-        // Optionally, inform the user of success
       } else {
         console.error('Failed to cancel the ticket:', response.data.message);
-        // Optionally, display an error message to the user
       }
     } catch (error) {
       console.error('An error occurred while cancelling the ticket:', error);
-      // Optionally, display an error message to the user
+    }
+  };
+
+  const fetchMoviesWatched = async (showtimeIds) => {
+    try {
+      // Step 1: Send Tickets Data to Backend
+      const response = await axios.post(
+        "/movie/fetchMoviesWatched",
+        { showtimeIds },
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      );
+  
+      // Step 2: Receive Movies Data from Backend
+      const { moviesWatched } = response.data;
+  
+      // Step 3: Update State to Display Movies
+      setMoviesWatched(moviesWatched);
+    } catch (error) {
+      console.error("Error fetching movies watched:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -74,24 +98,23 @@ const Tickets = () => {
     <div className="flex min-h-screen flex-col gap-4 bg-gradient-to-br pb-8 text-gray-900 sm:gap-8">
       <Navbar />
       <div className="mx-4 flex h-fit flex-col gap-4 rounded-md bg-gradient-to-br p-4 drop-shadow-xl sm:mx-8 sm:p-6">
-	  <div className="mx-4 flex h-fit flex-row gap-4 p-4 drop-shadow-xl sm:mx-1 sm:p-2">
-	  <div className="flex items-center  border-2 border-indigo-900 rounded-md w-1/2 mb-4 ">
-	  <h2 className="text-3xl font-bold text-gray-900 py-9 px-4">Membership Type: {membership}</h2>
-      </div>
-	  <div className="flex items-center  border-2 border-indigo-900 rounded-md w-1/2 mb-4 ">
-        <h2 className="text-3xl font-bold text-gray-900 py-9 px-4">Reward Points: {rewardPoints}</h2>
-      </div>
-	  </div>
+        <div className="mx-4 flex h-fit flex-row gap-4 p-4 drop-shadow-xl sm:mx-1 sm:p-2">
+          <div className="flex items-center border-2 border-indigo-900 rounded-md w-1/2 mb-4">
+            <h2 className="text-3xl font-bold text-gray-900 py-9 px-4">Membership Type: {membership}</h2>
+          </div>
+          <div className="flex items-center border-2 border-indigo-900 rounded-md w-1/2 mb-4">
+            <h2 className="text-3xl font-bold text-gray-900 py-9 px-4">Reward Points: {rewardPoints}</h2>
+          </div>
+        </div>
         <h2 className="text-3xl font-bold text-gray-900">My Tickets</h2>
         {isFetchingticketsDone ? (
-          
-            tickets.length === 0 ? (
-              <p className="text-center">
-                You have not purchased any tickets yet
-              </p>
-            ) : (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 min-[1920px]:grid-cols-3">
-                {tickets.map((ticket, index) => (
+          tickets.length === 0 ? (
+            <p className="text-center">
+              You have not purchased any tickets yet
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 min-[1920px]:grid-cols-3">
+              {tickets.map((ticket, index) => (
                 <div className="flex flex-col" key={index}>
                   <ShowtimeDetails showtime={ticket.showtime} />
                   <div className="flex h-full flex-col justify-between rounded-b-lg bg-gradient-to-br from-indigo-100 to-white text-center text-lg drop-shadow-lg md:flex-row">
@@ -108,15 +131,51 @@ const Tickets = () => {
                     >
                       Cancel
                     </button>
+                    
                   </div>
                 </div>
               ))}
-              </div>
-            )
-          
+            </div>
+          )
         ) : (
           <Loading />
-        )}
+        )
+        
+        }
+
+{isFetchingticketsDone ? (
+          tickets.length === 0 ? (
+            <p className="text-center">
+              You have not purchased any tickets yet
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 min-[1920px]:grid-cols-3">
+              <button
+  onClick={async () => {
+    setLoading(true);
+    await fetchMoviesWatched(tickets.map(ticket => ticket.showtime._id));
+    console.log('showtimes frontend',tickets.map(ticket => ticket.showtime._id))
+  }}
+  className="mb-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
+>
+  Fetch Movies Watched
+</button>
+{loading ? (
+  <Loading />
+) : (
+  <div>
+
+  </div>
+)}
+
+            </div>
+          )
+        ) : (
+          <Loading />
+        )
+        
+        }
+  
       </div>
     </div>
   );

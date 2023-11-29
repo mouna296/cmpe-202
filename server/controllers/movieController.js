@@ -1,5 +1,95 @@
 const Movie = require('../models/Movie')
 const Showtime = require('../models/Showtime')
+const moment = require('moment');
+
+
+
+// controllers/userController.js
+
+const User = require('../models/User')
+
+// exports.getWatchedMoviesLast30Days = async (req, res, next) => {
+//   try {
+//     const userId = req.params.userId;
+    
+//     const thirtyDaysAgo = new Date();
+//     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+//     const user = await User.findById(userId).populate({
+//       path: 'tickets.showtime',
+//       populate: {
+//         path: 'movie',
+//         model: 'Movie'
+//       }
+//     });
+
+//     // Extract movies watched in the last 30 days
+//     const watchedMovies = user.tickets
+//       .filter((ticket) => ticket.showtime.showtime >= thirtyDaysAgo)
+//       .map((ticket) => ticket.showtime.movie);
+// 	console.log('watcheed movies last 30 days',watchedMovies)
+//     res.status(200).json({
+//       success: true,
+//       count: watchedMovies.length,
+//       data: watchedMovies,
+//     });
+//   } catch (err) {
+//     res.status(500).json({ success: false, message: err.message });
+//   }
+// };
+
+// exports.getMoviesWatchedByUser = async (req, res, next) => {
+//     const userId = req.params.userId;  // Assuming the user ID is passed as a URL parameter
+//     const thirtyDaysAgo = new Date();
+//     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+//     try {
+//         // Fetch showtimes in the last 30 days for the specified user
+//         const showtimes = await Showtime.find({
+//             'seats.user': userId,
+//             showtime: { $gte: thirtyDaysAgo }
+//         }).populate('movie');
+
+//         // Extract movie details from the showtimes
+//         const movies = showtimes.map(showtime => showtime.movie);
+
+//         res.status(200).json({ success: true, data: movies });
+//     } catch (err) {
+//         res.status(400).json({ success: false, message: err });
+//     }
+// };
+
+exports.fetchMoviesWatched= async (req, res,next) => {
+	try {
+		const { showtimeIds } = req.body;
+		console.log('request body', req.body)
+		// Find showtimes less than 30 days from the current date
+		const thirtyDaysAgo = moment().subtract(30, 'days').toDate();
+		const showtimes = await Showtime.find({
+		  _id: { $in: showtimeIds },
+		  showtime: { $gte: thirtyDaysAgo },
+		}).populate('movie');
+	
+		// Extract movie data from the showtimes
+		const moviesWatched = showtimes.map((showtime) => {
+		  return {
+			movieId: showtime.movie._id,
+			movieName: showtime.movie.name,
+			movieLength: showtime.movie.length,
+			movieImg: showtime.movie.img,
+			showtimeId: showtime._id,
+			showtimeDateTime: showtime.showtime,
+		  };
+		});
+		console
+		//res.json({ moviesWatched });
+		res.status(200).json({ success: true, data: moviesWatched })
+
+	} catch (error) {
+	  console.error('Error fetching movies watched:', error);
+	  res.status(500).json({ success: false, message: 'Internal Server Error' });
+	}
+  };
 
 //@desc     GET all movies
 //@route    GET /movie

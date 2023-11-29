@@ -6,14 +6,17 @@ const {
 	updateMovie,
 	deleteMovie,
 	getShowingMovies,
-	getUnreleasedShowingMovies
+	getUnreleasedShowingMovies,
+	fetchMoviesWatched
 } = require('../controllers/movieController')
 const router = express.Router()
-
+const movieController = require('../controllers/movieController');
 const { protect, authorize } = require('../middleware/auth')
 
 router.route('/').get(getMovies).post(protect, authorize('admin'), createMovie)
 router.route('/showing').get(getShowingMovies)
+router.route('/fetchMoviesWatched').post(fetchMoviesWatched)
+
 router.route('/unreleased/showing').get(protect, authorize('admin'), getUnreleasedShowingMovies)
 router
 	.route('/:id')
