@@ -36,6 +36,35 @@ const Tickets = () => {
       setIsFetchingticketsDone(true);
     }
   };
+  const handleCancelTicket = async (ticketId) => {
+ 
+
+    if (!ticketId) {
+      console.error('Ticket _id is undefined');
+      // Handle the error appropriately
+      return;
+    }
+  
+    try {
+      const response = await axios.delete(`/showtime/cancel/${ticketId}`, {}, 
+      {
+        headers: {
+          Authorization: `Bearer ${auth.token}`
+        }
+      });
+      if (response.data.success) {
+        alert("sucess")
+        setTickets(currentTickets => currentTickets.filter(t => t._id !== ticket._id));
+        // Optionally, inform the user of success
+      } else {
+        console.error('Failed to cancel the ticket:', response.data.message);
+        // Optionally, display an error message to the user
+      }
+    } catch (error) {
+      console.error('An error occurred while cancelling the ticket:', error);
+      // Optionally, display an error message to the user
+    }
+  };
 
   useEffect(() => {
     fetchTickets();
@@ -55,38 +84,36 @@ const Tickets = () => {
 	  </div>
         <h2 className="text-3xl font-bold text-gray-900">My Tickets</h2>
         {isFetchingticketsDone ? (
-          <>
-            {tickets.length === 0 ? (
+          
+            tickets.length === 0 ? (
               <p className="text-center">
                 You have not purchased any tickets yet
               </p>
             ) : (
               <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 min-[1920px]:grid-cols-3">
-                {tickets.map((ticket, index) => {
-                  return (
-                    <div className="flex flex-col" key={index}>
-                      <ShowtimeDetails showtime={ticket.showtime} />
-                      <div className="flex h-full flex-col justify-between rounded-b-lg bg-gradient-to-br from-slate-100 to-white text-center text-lg drop-shadow-lg md:flex-row">
-                        <div className="flex h-full flex-col items-center gap-x-4 px-4 py-2 md:flex-row">
-                          <p className="whitespace-nowrap font-semibold">
-                            Seats :{" "}
-                          </p>
-                          <p className="text-left">
-                            {ticket.seats
-                              .map((seat) => seat.row + seat.number)
-                              .join(", ")}
-                          </p>
-                          <p className="whitespace-nowrap">
-                            ({ticket.seats.length} seats)
-                          </p>
-                        </div>
-                      </div>
+                {tickets.map((ticket, index) => (
+                <div className="flex flex-col" key={index}>
+                  <ShowtimeDetails showtime={ticket.showtime} />
+                  <div className="flex h-full flex-col justify-between rounded-b-lg bg-gradient-to-br from-indigo-100 to-white text-center text-lg drop-shadow-lg md:flex-row">
+                    <div className="flex h-full flex-col items-center gap-x-4 px-4 py-2 md:flex-row">
+                      <p className="whitespace-nowrap font-semibold">Seats:</p>
+                      <p className="text-left">
+                        {ticket.seats.map((seat) => `${seat.row}${seat.number}`).join(', ')}
+                      </p>
+                      <p className="whitespace-nowrap">({ticket.seats.length} seats)</p>
                     </div>
-                  );
-                })}
+                    <button
+                      onClick={() => handleCancelTicket(ticket._id)}
+                      className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition duration-300"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ))}
               </div>
-            )}
-          </>
+            )
+          
         ) : (
           <Loading />
         )}

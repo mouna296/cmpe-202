@@ -41,7 +41,8 @@ const userSchema = new mongoose.Schema({
 					row: { type: String },
 					number: { type: Number }
 				}
-			]
+			],
+			id:{type: String}
 		}
 	],
 	rewardPoints: {

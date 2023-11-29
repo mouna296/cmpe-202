@@ -227,7 +227,7 @@ exports.purchase = async (req, res, next) => {
       const updatedUser = await User.findByIdAndUpdate(
         user._id,
         {
-          $push: { tickets: { showtime, seats: seatUpdates } },
+          $push: { tickets: { showtime : showtime._id, seats: seatUpdates } },
 		  $inc: { rewardPoints: rewardPointsEarned }
 
         },
@@ -331,3 +331,59 @@ exports.deletePreviousShowtime = async (req, res, next) => {
 		res.status(400).json({ success: false, message: err })
 	}
 }
+
+//@desc     cancel tickets 
+//@route    DELETE /showtime/cancel/:id
+//@access   public 
+exports.cancelTicket = async (req, res,next) => {
+	try {
+  
+	  const ticketId = req.params.id;
+	  console.log('Request ID', ticketId);
+  
+	  // Find the user who owns the ticket
+	  const user = await User.findOne({ 'tickets._id': ticketId });
+	  console.log('user:',user)
+	  if (!user) {
+		return res.status(404).json({ success: false, message: 'Ticket not found.' });
+	  }
+  
+	  // Find the ticket within the user's tickets
+	  const ticket = user.tickets.id(ticketId);
+	  console.log('ticket retrieved',ticket)
+	  if (!ticket) {
+		return res.status(404).json({ success: false, message: 'Ticket not found.' });
+	  }
+  
+	  // Assuming that the showtime ID is stored in the ticket
+	  // and you have a separate Showtime model
+  
+	  const showtime = await Showtime.findById(ticket.showtime._id);
+	  console.log('trying to find showtime',showtime)
+	  if (!showtime) {
+		return res.status(404).json({ success: false, message: 'Showtime not found.' });
+	  }
+  
+	  console.log('dateTime in showtime', showtime.showtime)
+	  // Check if showtime is in the past
+	  if (new Date(showtime.showtime) < new Date()) {
+		return res.status(400).json({ success: false, message: 'Cannot cancel past showtimes.' });
+	  }
+  
+	  // Proceed with ticket cancellation
+	   const result = await User.updateOne(
+		  { 'tickets._id': ticketId },
+		  { $pull: { tickets: { _id: ticketId } } }
+		);
+	
+		if (result.modifiedCount === 0) {
+		  return res.status(404).json({ success: false, message: 'Ticket not found.' });
+		}
+	  res.json({ success: true, message: 'Ticket cancelled successfully.' });
+  
+  
+	} catch (error) {
+	  console.error('Cancellation error:', error);
+	  res.status(500).json({ success: false, message: 'Error cancelling ticket.' });
+	}
+  }
