@@ -123,7 +123,7 @@ const Navbar = () => {
                 <VideoCameraIcon className="h-6 w-6" />
                 <p>Movie</p>
               </Link>
-              <Link
+              {/* <Link
                 to={"/search"}
                 className={`flex items-center justify-center gap-2 rounded-md px-2 py-1 text-white hover:bg-gray-500 ${
                   window.location.pathname === "/search"
@@ -133,7 +133,7 @@ const Navbar = () => {
               >
                 <MagnifyingGlassIcon className="h-6 w-6" />
                 <p>Search</p>
-              </Link>
+              </Link> */}
               <Link
                 to={"/user"}
                 className={`flex items-center justify-center gap-2 rounded-md px-2 py-1 text-white hover:bg-gray-500 ${
