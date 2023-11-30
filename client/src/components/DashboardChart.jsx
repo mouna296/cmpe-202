@@ -1,79 +1,44 @@
-import {MagnifyingGlassIcon} from '@heroicons/react/24/solid'
+import React from 'react';
+import { Bar } from 'react-chartjs-2';
 
-import React, { useEffect, useState } from 'react';
-import { Line } from 'react-chartjs-2';
+const OccupancyChart = ({ data }) => {
+    // Extracting necessary data from the received data object for the chart
+    const chartData = {
+        labels: data.map((item) => `${item.movie} - ${item.location} - ${item.theater}`),
+        datasets: [
+            {
+                label: 'Total Seats Sold',
+                data: data.map((item) => item.totalSeatsSold),
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }
+        ]
+    };
 
-const DashboardChart = () => {
-  const [occupancyData, setOccupancyData] = useState([]);
+    const chartOptions = {
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Total Seats Sold'
+                }
+            },
+            x: {
+                title: {
+                    display: true,
+                    text: 'Movies, Location, Theater'
+                }
+            }
+        }
+    };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const response = await api.get('/dashboard/occupancy'); // Replace with your actual endpoint
-      setOccupancyData(response.data.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-  // Transform occupancyData to the format required by Chart.js
-  const chartData = {
-    labels: occupancyData.map((data) => data.movie),
-    datasets: [
-      {
-        label: 'Occupancy',
-        data: occupancyData.map((data) => data.occupancy),
-        backgroundColor: 'rgba(75,192,192,0.2)',
-        borderColor: 'rgba(75,192,192,1)',
-        borderWidth: 1,
-      },
-    ],
-  };
-  // Dummy data for the chart (replace with your actual data)
-		// const data = {
-		//   labels: ['January', 'February', 'March', 'April', 'May'],
-		//   datasets: [
-		// 	{
-		// 	  label: 'Sales for 2021 (in $)',
-		// 	  backgroundColor: 'rgba(75, 192, 192, 0.2)',
-		// 	  borderColor: 'rgba(75, 192, 192, 1)',
-		// 	  borderWidth: 1,
-		// 	  hoverBackgroundColor: 'rgba(75, 192, 192, 0.4)',
-		// 	  hoverBorderColor: 'rgba(75, 192, 192, 1)',
-		// 	  data: [500, 800, 1100, 600, 1200], // Replace with your actual data values
-		// 	},
-		//   ],
-		// }; 
-
-		// const options = {
-		// 	scales: {
-		// 	  yAxes: [
-		// 		{
-		// 		  ticks: {
-		// 			beginAtZero: true,
-		// 		  },
-		// 		},
-		// 	  ],
-		// 	},
-		//   };
-  const options = {
-			scales: {
-			  yAxes: [
-				{
-				  ticks: {
-					beginAtZero: true,
-				  },
-				},
-			  ],
-			},
-		  };
-
-
-
-  return <Line data={chartData} />;
+    return (
+        <div className="chart-container" style={{ height: '400px', width: '600px' }}>
+            <Bar data={chartData} options={chartOptions} />
+        </div>
+    );
 };
 
-export default DashboardChart;
+export default OccupancyChart;

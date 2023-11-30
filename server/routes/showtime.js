@@ -18,7 +18,7 @@ const {
 } = require('../controllers/showtimeController')
 
 router.get('/occupancy', protect, authorize('admin'), async (req, res) => {
-    const { period } = req.query; // period can be 30, 60, or 90 days
+    const { period } = req.query;
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(endDate.getDate() - parseInt(period));

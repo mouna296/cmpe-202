@@ -13,6 +13,7 @@ import Search from './pages/Search'
 import Showtime from './pages/Showtime'
 import Tickets from './pages/Tickets'
 import User from './pages/User'
+import DashboardAnalytics from './pages/dashboard'
 
 axios.defaults.baseURL = import.meta.env.VITE_SERVER_URL || 'http://localhost:8080'
 axios.defaults.withCredentials = true
@@ -39,6 +40,14 @@ function App() {
 					element={
 						<AdminRoute>
 							<Search />
+						</AdminRoute>
+					}
+				/>
+				<Route
+					path="/dashboard"
+					element={
+						<AdminRoute>
+							<DashboardAnalytics />
 						</AdminRoute>
 					}
 				/>
