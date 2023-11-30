@@ -8,6 +8,7 @@ import TheaterListsByMovie from "../components/TheaterListsByMovie";
 import SelectedMovie from "../components/SelectedMovie";
 import { AuthContext } from "../context/AuthContext";
 import { useLocation } from "../context/LocationContext";
+import UpcomingMovies from "../components/UpcomingMovies";
 
 const Home = () => {
   const { auth } = useContext(AuthContext);
@@ -62,7 +63,7 @@ const Home = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col gap-4 bg-gradient-to-br pb-8 sm:gap-8">
+    <div className="flex min-h-screen flex-col gap-4 bg-gradient-to-br from-slate-600 to-slate-500 pb-8 sm:gap-8">
       <Navbar />
 	  {selectedLocation === null && (
 	  <Modal
@@ -105,13 +106,19 @@ const Home = () => {
 		   </div>
 		 </Modal>
 	  )}
-
+      
       {movies[selectedMovieIndex]?.name ? (
         <SelectedMovie {...props} />
       ) : (
         <NowShowing {...props} />
+        
       )}
+      
       {movies[selectedMovieIndex]?.name && <TheaterListsByMovie {...props} />}
+      <UpcomingMovies {...props}  />
+      
+
+      
     </div>
   );
 };

@@ -17,6 +17,11 @@ const Purchase = () => {
   const [useRewardPoints, setUseRewardPoints] = useState(false);
   const [rewardPoints, setRewardPoints] = useState(0);
   const [membership, setMembership] = useState("");
+  const [isDiscounted, setIsDiscounted] = useState(false);
+
+  const handleCheckboxChange = (isChecked) => {
+    setIsDiscounted(isChecked);
+  };
 
   const getUser = async () => {
 	try {
@@ -42,7 +47,7 @@ const Purchase = () => {
     try {
       const response = await axios.post(
         `/showtime/${showtime._id}`,
-        { seats: selectedSeats, useRewardPoints },
+        { seats: selectedSeats, useRewardPoints,isDiscounted },
         {
           headers: {
             Authorization: `Bearer ${auth.token}`,
@@ -84,17 +89,29 @@ const Purchase = () => {
             )}
           </div>
           <div className="flex flex-col items-center gap-x-4 px-4 py-2 md:flex-row justify-end ml-auto">
-            <div className="flex flex-col md:flex-row gap-4">
-              <p className="font-semibold flex items-center justify-end gap-2 rounded-b-lg">
-                <label className=" items-center gap-2 rounded-b-lg px-4 py-1 bg-gradient-to-br from-red-600 to-red-500 font-semibold text-white md:rounded-none md:rounded-br-lg">
-                  <div>Tickets Price: ${selectedSeats.length * 20}</div>
-				  <div>Service Fee{(membership === "Premium") ? "$0" : "($1.5/Ticket): $"+(selectedSeats.length * 1.5)}</div>
-				  <div>Total: ${(membership === "Premium") ? (selectedSeats.length * 20) : (selectedSeats.length * 21.5)}</div>
-                </label>
-				
-              </p>
-            </div>
-          </div>
+  <div className="flex flex-col md:flex-row gap-4">
+    <p className="font-semibold flex items-center justify-end gap-2 rounded-b-lg">
+      <label className="items-center gap-2 rounded-b-lg px-4 py-1 bg-gradient-to-br from-red-600 to-red-500 font-semibold text-white md:rounded-none md:rounded-br-lg">
+        <div>Tickets Price: ${isDiscounted ? 10 : 20}</div>
+        <div>
+          Service Fee{(membership === "Premium")
+            ? "$0"
+            : `($1.5/Ticket): $${selectedSeats.length * 1.5}`}
+        </div>
+        <div>
+          Total: ${(membership === "Premium")
+            ? isDiscounted
+              ? 10
+              : selectedSeats.length * 20
+            : isDiscounted
+            ? 10 + selectedSeats.length * 1.5
+            : selectedSeats.length * 21.5}
+        </div>
+      </label>
+    </p>
+  </div>
+</div>
+
         </div>
 
         <div className="flex flex-col items-center gap-x-4 px-4 py-2 md:flex-row justify-end">
@@ -113,6 +130,21 @@ const Purchase = () => {
                     : "Use Reward Points? Remaining points: $"+rewardPoints}
                 </div>
               </label>
+              {auth.role === 'admin' && (
+              <label className="flex items-center gap-2 rounded-b-lg px-4 py-1 bg-gradient-to-br from-red-600 to-red-500 font-semibold text-white hover:from-red-500 disabled:from-slate-500 disabled:to-slate-400 md:rounded-none md:rounded-br-lg">
+                <input
+                  type="checkbox"
+                  checked={isDiscounted}
+                  onChange={() => handleCheckboxChange(!isDiscounted)}
+                  disabled={isPurchasing}
+                />
+                <div>
+                  {isDiscounted
+                    ? "Cancel Discount"
+                    : "Apply Discount (if applicable)"}
+                </div>
+              </label>
+               )}
             </div>
           )}
         </div>

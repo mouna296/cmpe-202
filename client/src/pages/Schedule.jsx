@@ -232,7 +232,8 @@ const Schedule = () => {
 												{...register('showtime', { required: true })}
 											/>
 										</div>
-<button
+										
+											<button
 											title="Add showtime"
 											disabled={isAddingShowtime}
 											className="hiddenwhitespace-nowrap rounded-md bg-lime-600  px-2 py-1 font-medium text-white drop-shadow-md disabled:from-slate-500 disabled:to-slate-400 lg:flex mt-7"

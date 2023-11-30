@@ -140,7 +140,17 @@ exports.addShowtime = async (req, res, next) => {
 	}
 }
 
-
+function calculateTicketPrice(isPremiumUser, seats, isTuesday, isBefore6PM,isDiscounted) {
+	const basePrice = isPremiumUser ? SEAT_PRICE : SEAT_PRICE + SERVICE_FEE;
+	const specialPrice = 10;
+  
+	if (isDiscounted&&(isTuesday || isBefore6PM)) {
+	  return specialPrice * seats.length;
+	}
+  
+	return basePrice * seats.length;
+  }
+  
 
 
 //@desc     Purchase seats
@@ -149,7 +159,8 @@ exports.addShowtime = async (req, res, next) => {
 
 exports.purchase = async (req, res, next) => {
     try {
-      const { seats, useRewardPoints } = req.body;
+      const { seats, useRewardPoints, isDiscounted } = req.body;
+	  console.log('request in purchase api', req.body)
       const user = req.user;
 	  const isPremiumUser = user.membership === 'Premium';
   
@@ -163,7 +174,7 @@ exports.purchase = async (req, res, next) => {
           .status(400)
           .json({ success: false, message: `Showtime not found with id of ${req.params.id}` })
       }
-  
+	  
       const isSeatValid = seats.every((seatNumber) => {
         const [row, number] = seatNumber.match(/([A-Za-z]+)(\d+)/).slice(1)
         const maxRow = showtime.theater.seatPlan.row
@@ -188,8 +199,11 @@ exports.purchase = async (req, res, next) => {
       if (!isSeatAvailable) {
         return res.status(400).json({ success: false, message: 'Seat not available' })
       }
-  
-	  const purchaseAmount = isPremiumUser ? seats.length * SEAT_PRICE : seats.length * (SEAT_PRICE + SERVICE_FEE);
+	  const currentDate = new Date();
+    const isTuesday = currentDate.getDay() === 2; // 2 corresponds to Tuesday
+    const isBefore6PM = currentDate.getHours() < 18; // Assuming 24-hour format
+
+    const purchaseAmount = calculateTicketPrice(isPremiumUser, seats, isTuesday, isBefore6PM,isDiscounted);
 	  let rewardPointsEarned;
 
       if (useRewardPoints) {

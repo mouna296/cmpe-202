@@ -101,6 +101,7 @@ exports.createCinema = async (req, res, next) => {
 			data: cinema
 		})
 	} catch (err) {
+		console.log('add cinemas',err)
 		res.status(400).json({ success: false, message: err })
 	}
 }
