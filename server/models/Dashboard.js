@@ -11,7 +11,7 @@ const DashboardSchema = new mongoose.Schema(
 			required: [true, 'Please add a number']
 		},
         date: {
-            type: Date,
+            type: Date,	
             default: Date.now,
           },
 	}
