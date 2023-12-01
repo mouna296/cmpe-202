@@ -7,7 +7,8 @@ import {
   UsersIcon,
   VideoCameraIcon,
   ChartBarIcon,
-  MapPinIcon
+  MapPinIcon,
+  PlayIcon
 } from "@heroicons/react/24/outline";
 import { Bars3Icon } from "@heroicons/react/24/solid";
 import axios from "axios";
@@ -120,19 +121,7 @@ const Navbar = () => {
             <ClockIcon className="h-6 w-6" />
             <p>Schedule</p>
           </Link>
-          {auth.role && (
-            <Link
-              to={"/ticket"}
-              className={`flex items-center justify-center gap-2 rounded-md px-2 py-1 text-white hover:bg-gray-500 ${
-                window.location.pathname === "/ticket"
-                  ? "bg-gradient-to-br from-red-800 to-red-700"
-                  : "bg-gray-600"
-              }`}
-            >
-              <TicketIcon className="h-6 w-6" />
-              <p>My Profile</p>
-            </Link>
-          )}
+          
           {auth.role === "admin" && (
             <>
               <Link
@@ -265,6 +254,19 @@ const Navbar = () => {
               <Link to={"/login"}>Login</Link>
             </button>
           )}
+          {auth.role && (
+            <Link
+              to={"/ticket"}
+              className={`flex items-center justify-center gap-2 rounded-md px-2 py-1 text-white hover:bg-gray-500 ${
+                window.location.pathname === "/ticket"
+                  ? "bg-gradient-to-br from-red-800 to-red-700"
+                  : "bg-gray-600"
+              }`}
+            >
+              <TicketIcon className="h-4 w-4" />
+              <p className="text-xs">My Profile</p>
+            </Link>
+          )}
         </div>
       </>
     );
@@ -277,9 +279,9 @@ const Navbar = () => {
           className="flex flex-row items-center gap-2"
           onClick={() => navigate("/")}
         >
-          <FilmIcon className="h-8 w-8 text-white" />
-          <h1 className="mr-2 text-xl text-white">Cinema</h1>
-        </button>
+            <PlayIcon className="h-8 w-8 text-white 500" />
+            <h1 style={{ color: 'rgb(239, 100, 0)', fontSize: '24px' }} className="mr-2 text-4xl text-white font-custom">ITSshowtime</h1>
+          </button>
         <button
           className="flex h-8 w-8 items-center justify-center rounded hover:bg-gray-700 lg:hidden"
           onClick={() => toggleMenu()}
