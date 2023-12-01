@@ -2,7 +2,10 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { AuthContext } from '../context/AuthContext';
+import { Bar } from 'react-chartjs-2';
+import { Chart, registerables} from 'chart.js';
 
+Chart.register(...registerables);
 const Analytics = () => {
     const { auth } = useContext(AuthContext);
     const [rawData, setRawData] = useState([]);
@@ -10,6 +13,11 @@ const Analytics = () => {
     const [period, setPeriod] = useState(30);
     const [locationFilter, setLocationFilter] = useState('All');
     const [movieFilter, setMovieFilter] = useState('All');
+    const [chartMovieData, setCharMovieData] = useState();
+    const [charLoctionData, setCharLoctionData] = useState();
+
+    
+    const [showBarMovieGraph, setshowBarMovieGraph] = useState(false);
 
     useEffect(() => {
         const fetchOccupancyData = async () => {
@@ -21,6 +29,7 @@ const Analytics = () => {
                 });
                 setRawData(response.data.data);
                 processOccupancyData(response.data.data, 'All', 'All');
+
             } catch (error) {
                 console.error('Error fetching occupancy data:', error);
             }
@@ -30,11 +39,107 @@ const Analytics = () => {
     }, [period, auth.token]);
 
     const processOccupancyData = (data, location, movie) => {
-        const filteredData = data.filter(item => 
-            (location === 'All' || item.location === location) &&
-            (movie === 'All' || item.movie === movie)
-        );
-        const processedData = filteredData.reduce((acc, curr) => {
+
+        let filteredData_ = data;
+        if(location !== "All"){
+            filteredData_ = data.filter((movieData) => movieData.location === location);
+        }
+        if(movie !== "All"){
+            filteredData_ = filteredData_.filter((movieData) => movieData.movie === movie);
+        }
+
+        let charMovieCustom = {};
+        
+        filteredData_.map((data) => {
+            if(data.movie in charMovieCustom){
+                let num = charMovieCustom[data.movie];
+                num += data.totalSeatsSold;
+                charMovieCustom[data.movie] = num;
+            }
+            else{
+                charMovieCustom[data.movie] = data.totalSeatsSold;
+            }
+        })
+        console.log(charMovieCustom);
+
+        let charLocationCustom = {};
+        filteredData_.map((data) => {
+            if(data.location in charLocationCustom){
+                let num = charLocationCustom[data.location];
+                num += data.totalSeatsSold;
+                charLocationCustom[data.location] = num;
+            }
+            else{
+                charLocationCustom[data.location] = data.totalSeatsSold;
+            }
+        })
+
+        console.log(charLocationCustom);
+
+        let movieLabels = [];
+        let moviesSeats = [];
+        for(let key in charMovieCustom){
+            movieLabels.push(key);
+            moviesSeats.push(charMovieCustom[key]);
+        }
+
+        let charMovieData = {};
+        charMovieData["labels"] = movieLabels;
+        let movieDataset = [];
+        let singleMovieDataset = {};
+        singleMovieDataset["label"] = "Movies Over Total Seats solds"
+        singleMovieDataset["data"] = moviesSeats;
+        let backgroundMovies = [];
+        
+        let borderMovies = [];
+        movieLabels.map((movie) => {
+            backgroundMovies.push('rgba(255, 99, 132, 0.6)');
+            borderMovies.push('rgba(255, 99, 132, 1)');
+        })
+        singleMovieDataset["backgroundColor"] = backgroundMovies;
+        singleMovieDataset["borderColor"] = borderMovies;
+        movieDataset.push(singleMovieDataset);
+        charMovieData["datasets"] = movieDataset;
+
+        console.log(charMovieData);
+        setCharMovieData(charMovieData);
+
+        let LocationLabels = [];
+        let LocationsSeats = [];
+        for(let key in charLocationCustom){
+            LocationLabels.push(key);
+            LocationsSeats.push(charLocationCustom[key]);
+        }
+
+        let charLocationData = {};
+        charLocationData["labels"] = LocationLabels;
+        let LocationDataset = [];
+        let singleLocationDataset = {};
+        singleLocationDataset["label"] = "Locations Over Total Seats solds"
+        singleLocationDataset["data"] = LocationsSeats;
+        let backgroundLocations = [];
+        
+        let borderLocations = [];
+        LocationLabels.map((Location) => {
+            backgroundLocations.push('rgba(54, 162, 235, 0.6)');
+            borderLocations.push('rgba(255, 99, 132, 1)');
+        })
+        singleLocationDataset["backgroundColor"] = backgroundLocations;
+        singleLocationDataset["borderColor"] = borderLocations;
+        LocationDataset.push(singleLocationDataset);
+        charLocationData["datasets"] = LocationDataset;
+
+        console.log(charLocationData);
+        setCharLoctionData(charLocationData);
+
+        let locationLabels = [];
+        let locationsSeats = [];
+        for(let key in charLocationCustom){
+            locationLabels.push(key);
+            locationsSeats.push(charLocationCustom[key]);
+        }
+
+        const processedData = filteredData_.reduce((acc, curr) => {
             const key = `${curr.movie} - ${curr.location}`;
             if (acc[key]) {
                 acc[key].totalSeatsSold += curr.totalSeatsSold;
@@ -45,7 +150,9 @@ const Analytics = () => {
         }, {});
 
         setOccupancyData(Object.values(processedData));
+
     };
+
 
     const handleLocationChange = (e) => {
         setLocationFilter(e.target.value);
@@ -92,6 +199,7 @@ const Analytics = () => {
                     </div>
                 </div>
                 <div>
+                    <div>
                     {occupancyData.length > 0 ? (
                         <div>
                             {occupancyData.map((data, index) => (
@@ -104,6 +212,44 @@ const Analytics = () => {
                     ) : (
                         <p>No data available for the selected period, location, or movie.</p>
                     )}
+                    </div>
+                    <div>
+                        {chartMovieData && 
+                            <Bar
+                            data={chartMovieData}
+                            options={{
+                                indexAxis: 'x', // Change 'x' to 'y' for horizontal bars
+                                responsive: true,
+                                scales: {
+                                x: {
+                                    beginAtZero: true,
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                },
+                                },
+                            }}
+                            />
+                        }
+                        {charLoctionData && 
+                            <Bar
+                            data={charLoctionData}
+                            options={{
+                                indexAxis: 'x', // Change 'x' to 'y' for horizontal bars
+                                responsive: true,
+                                scales: {
+                                x: {
+                                    beginAtZero: true,
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                },
+                                },
+                            }}
+                            />
+                        }
+                    
+                    </div>
                 </div>
             </div>
         </div>

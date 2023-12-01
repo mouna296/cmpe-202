@@ -6,11 +6,12 @@ import {
   TicketIcon,
   UsersIcon,
   VideoCameraIcon,
-  ChartBarIcon
+  ChartBarIcon,
+  MapPinIcon
 } from "@heroicons/react/24/outline";
 import { Bars3Icon } from "@heroicons/react/24/solid";
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AuthContext } from "../context/AuthContext";
@@ -23,7 +24,22 @@ const Navbar = () => {
   const [isLoggingOut, SetLoggingOut] = useState(false);
   const [locationModalOpen, setLocationModalOpen] = useState(false);
   const { selectedLocation, updateLocation } = useLocation();
+  const [allLocations, setAllLocations] = useState([]);
 
+  const fetchLocations = async () => {
+      try {
+          const response = await axios.get(`/cinema`);
+          const cinemas = response.data.data;
+          const locations = [];
+          cinemas.map((cinema) => {
+            locations.push(cinema.location);
+          })
+          setAllLocations(locations);
+          
+      } catch (error) {
+          console.error('Error fetching occupancy data:', error);
+      }
+  }
   const handleLocation = (location) => {
     updateLocation(location);
     setLocationModalOpen(false);
@@ -32,13 +48,20 @@ const Navbar = () => {
     setMenuOpen(!menuOpen);
   };
 
-  const openLocationModal = () => {
-    setLocationModalOpen(true);
+  const  openLocationModal = async () => {
+    await fetchLocations();
+    
   };
 
   const closeLocationModal = () => {
     setLocationModalOpen(false);
   };
+
+  useEffect(() => {
+    if(allLocations.length > 0){
+      setLocationModalOpen(true);
+    }
+  }, [allLocations]);
 
   const navigate = useNavigate();
 
@@ -162,10 +185,15 @@ const Navbar = () => {
 
         <div className="flex grow items-center justify-center gap-3 lg:justify-end">
           <button
-            className="rounded-lg bg-gradient-to-br from-red-400 to-red-400 px-2 py-1 text-white drop-shadow-md hover:from-indigo-500 hover:to-blue-400"
+            className="rounded-lg bg-gradient-to-br bg-gray-600 px-2 py-1 text-white drop-shadow-md hover:from-indigo-500 hover:to-blue-400"
             onClick={openLocationModal}
           >
-           {selectedLocation ? <>{selectedLocation}</> : "📌Location"}
+            <div className="flex">
+              <MapPinIcon className="flex-shrink h-6 w-6" />
+              <div className="flex-grow">
+                {selectedLocation ? <>{selectedLocation}</> : "Location"}
+            </div>
+            </div>
           </button>
           {locationModalOpen && (
             <Modal
@@ -178,8 +206,18 @@ const Navbar = () => {
               <h2 className="text-2xl font-bold bg-white mb-4 p-4 rounded-t-md">
                 Select location:
               </h2>
-              <div className="flex flex-row gap-4 mb-4 py-4">
-                <button
+              <div className="flex flex-col gap-4 mb-4 py-4">
+                {
+                  allLocations.map((location_, index) => (
+                    <button
+                      className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 flex-grow"
+                      onClick={() => handleLocation(location_)}
+                    >
+                    {location_}
+                    </button>
+                  ))
+                }
+                {/* <button
                   className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 flex-grow"
                   onClick={() => handleLocation("San Jose")}
                 >
@@ -196,7 +234,7 @@ const Navbar = () => {
                   onClick={() => handleLocation("Fremont")}
                 >
                   Fremont
-                </button>
+                </button> */}
               </div>
               <div className="flex justify-end py-2">
                 <button
