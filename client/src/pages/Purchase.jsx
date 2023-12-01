@@ -23,6 +23,8 @@ const Purchase = () => {
     setIsDiscounted(isChecked);
   };
 
+  
+
   const getUser = async () => {
 	try {
 	  if (!auth.token) return;
