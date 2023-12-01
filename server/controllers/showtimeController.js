@@ -140,11 +140,12 @@ exports.addShowtime = async (req, res, next) => {
 	}
 }
 
-function calculateTicketPrice(isPremiumUser, seats, isTuesday, isBefore6PM,isDiscounted) {
+function calculateTicketPrice(isPremiumUser, seats, isTuesday, isBefore6PM,discount) {
+	console.log('discounted ?',discount)
 	const basePrice = isPremiumUser ? SEAT_PRICE : SEAT_PRICE + SERVICE_FEE;
 	const specialPrice = 10;
   
-	if (isDiscounted&&(isTuesday || isBefore6PM)) {
+	if (discount&&(isTuesday || isBefore6PM)) {
 	  return specialPrice * seats.length;
 	}
   
@@ -159,7 +160,7 @@ function calculateTicketPrice(isPremiumUser, seats, isTuesday, isBefore6PM,isDis
 
 exports.purchase = async (req, res, next) => {
     try {
-      const { seats, useRewardPoints, isDiscounted } = req.body;
+      const { seats, useRewardPoints, discount } = req.body;
 	  console.log('request in purchase api', req.body)
       const user = req.user;
 	  const isPremiumUser = user.membership === 'Premium';
@@ -203,7 +204,8 @@ exports.purchase = async (req, res, next) => {
     const isTuesday = currentDate.getDay() === 2; // 2 corresponds to Tuesday
     const isBefore6PM = currentDate.getHours() < 18; // Assuming 24-hour format
 
-    const purchaseAmount = calculateTicketPrice(isPremiumUser, seats, isTuesday, isBefore6PM,isDiscounted);
+    const purchaseAmount = calculateTicketPrice(isPremiumUser, seats, isTuesday, isBefore6PM,discount);
+	console.log('purchase amount',purchaseAmount)
 	  let rewardPointsEarned;
 
       if (useRewardPoints) {

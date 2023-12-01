@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { Route, Routes } from 'react-router'
+import { Route, Routes} from 'react-router'
+import { useContext, useState } from "react";
 import { ToastContainer } from 'react-toastify'
 import AdminRoute from './AdminRoute'
 import Cinema from './pages/Cinema'
@@ -20,6 +21,10 @@ axios.defaults.baseURL = import.meta.env.VITE_SERVER_URL || 'http://localhost:80
 axios.defaults.withCredentials = true
 
 function App() {
+	const [discount, setDiscount] = useState(false);
+	const handleDiscount=(value)=>{
+		setDiscount(value);
+	}
 	return (
 		<>
 			<ToastContainer />
@@ -53,7 +58,7 @@ function App() {
 					}
 				/>
 				<Route path="/showtime/:id" element={<Showtime />} />
-				<Route path="/purchase/:id" element={<Purchase />} />
+				<Route path="/purchase/:id" element={<Purchase discount={discount} handleDiscount={handleDiscount}/>} />
 				<Route path="/ticket" element={<Tickets />} />
 				<Route path="/schedule" element={<Schedule />} />
 				<Route path="/past-tickets" element={<PastTickets />} />
