@@ -383,11 +383,15 @@ exports.cancelTicket = async (req, res,next) => {
 	  if (new Date(showtime.showtime) < new Date()) {
 		return res.status(400).json({ success: false, message: 'Cannot cancel past showtimes.' });
 	  }
+	  const refundAmount = calculateRefundAmount(ticket.seats.length);
+
   
 	  // Proceed with ticket cancellation
 	   const result = await User.updateOne(
 		  { 'tickets._id': ticketId },
-		  { $pull: { tickets: { _id: ticketId } } }
+		  { $pull: { tickets: { _id: ticketId } },
+		  $inc: { rewardPoints: refundAmount }
+		}
 		);
 	
 		if (result.modifiedCount === 0) {
@@ -400,4 +404,11 @@ exports.cancelTicket = async (req, res,next) => {
 	  console.error('Cancellation error:', error);
 	  res.status(500).json({ success: false, message: 'Error cancelling ticket.' });
 	}
+  }
+  function calculateRefundAmount(canceledSeats ) {
+	// Your logic to calculate the refund amount based on the number of canceled seats and discount status
+	//const baseTicketPrice = isDiscounted ? 10 : 20;
+	const refundAmount = canceledSeats * SEAT_PRICE;
+  
+	return refundAmount;
   }

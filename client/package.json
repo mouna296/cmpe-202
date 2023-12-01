@@ -11,10 +11,12 @@
   "dependencies": {
     "@heroicons/react": "^2.0.18",
     "axios": "^1.4.0",
+    "chart.js": "^4.4.0",
     "flowbite-react": "^0.6.4",
     "install": "^0.13.0",
     "npm": "^9.8.1",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.4",
     "react-modal": "^3.16.1",
