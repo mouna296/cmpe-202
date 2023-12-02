@@ -142,29 +142,37 @@ const Tickets = () => {
               You have not purchased any tickets yet
             </p>
           ) : (
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 min-[1920px]:grid-cols-3">
-              {tickets.map((ticket, index) => (
-                <div className="flex flex-col" key={index}>
-                  <ShowtimeDetails showtime={ticket.showtime} />
-                  <div className="flex h-full flex-col justify-between rounded-b-lg bg-gradient-to-br from-indigo-100 to-white text-center text-lg drop-shadow-lg md:flex-row">
-                    <div className="flex h-full flex-col items-center gap-x-4 px-4 py-2 md:flex-row">
-                      <p className="whitespace-nowrap font-semibold">Seats:</p>
-                      <p className="text-left">
-                        {ticket.seats.map((seat) => `${seat.row}${seat.number}`).join(', ')}
-                      </p>
-                      <p className="whitespace-nowrap">({ticket.seats.length} seats)</p>
-                    </div>
-                    <button
-                      onClick={() => handleCancelTicket(ticket._id)}
-                      className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition duration-300"
-                    >
-                      Cancel
-                    </button>
-                    
-                  </div>
-                </div>
-              ))}
-            </div>
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 min-[1820px]:grid-cols-3">
+  {tickets.map((ticket, index) => (
+    <div className="border border-gray-10 rounded-md overflow-hidden bg-white p-6" key={index}>
+      <ShowtimeDetails showtime={ticket.showtime} />
+      <div className="flex flex-col p-2">
+        <div className="flex justify-between items-center mb-3">
+          <p className="text-xs text-gray-40">Date: {ticket.showtime.date}</p>
+          <p className="text-xs text-gray-10">Time: {ticket.showtime.time}</p>
+        </div>
+        <div className="flex justify-between items-center mb-2">
+          <p className="text-xs text-gray-600">Seats:</p>
+          <p className="text-xs text-gray-800">
+            {ticket.seats.map((seat) => `${seat.row}${seat.number}`).join(', ')}
+            <span className="text-xs text-gray-500 ml-1">
+              ({ticket.seats.length} {ticket.seats.length === 1 ? 'seat' : 'seats'})
+            </span>
+          </p>
+        </div>
+        <button
+          onClick={() => handleCancelTicket(ticket._id)}
+          className="text-xs bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 transition duration-300"
+        >
+          Cancel Ticket
+        </button>
+      </div>
+    </div>
+
+
+  ))}
+</div>
+
           )
         ) : (
           <Loading />

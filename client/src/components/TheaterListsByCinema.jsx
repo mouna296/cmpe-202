@@ -195,8 +195,8 @@ const TheaterListsByCinema = ({ cinemas, selectedCinemaIndex, setSelectedCinemaI
 	}
 
 	return (
-		<div className="mx-4 h-fit rounded-md bg-gradient-to-br from-slate-200 to-blue-100 text-gray-900 drop-shadow-md sm:mx-8">
-			<div className="flex items-center justify-center gap-2 rounded-t-md bg-gradient-to-br from-gray-900 to-gray-800 px-2 py-1.5 text-center text-2xl font-semibold text-white sm:py-2">
+		<div className="mx-4 h-fit rounded-md bg-gradient-to-br from-slate-200 to-slate-100 text-grey-900 drop-shadow-md sm:mx-8">
+			<div className="flex items-center justify-center gap-2 rounded-t-md bg-gradient-to-br from-red-900 to-gray-800 px-2 py-1.5 text-center text-2xl font-semibold text-white sm:py-2">
 				{isEditing ? (
 					<input
 						title="Cinema name"
@@ -217,7 +217,7 @@ const TheaterListsByCinema = ({ cinemas, selectedCinemaIndex, setSelectedCinemaI
 							<form onClick={handleSubmitName(onEditCinema)}>
 								<button
 									title="Save cinema name"
-									className="flex w-fit items-center gap-1 rounded-md bg-gradient-to-r from-slate-600 to-blue-500  py-1 pl-2 pr-1.5 text-sm font-medium text-white hover:from-slate-500 hover:to-blue-400"
+									className="flex w-fit items-center gap-1 rounded-md bg-gradient-to-r from-slate-600 to-grey-500  py-1 pl-2 pr-1.5 text-sm font-medium text-white hover:from-slate-500 hover:to-blue-400"
 									onClick={() => {
 										SetIsEditing(false)
 									}}
@@ -229,7 +229,7 @@ const TheaterListsByCinema = ({ cinemas, selectedCinemaIndex, setSelectedCinemaI
 						) : (
 							<button
 								title="Edit cinema name"
-								className="flex w-fit items-center gap-1 rounded-md bg-gradient-to-r from-slate-600 to-blue-500  py-1 pl-2 pr-1.5 text-sm font-medium text-white hover:from-slate-500 hover:to-blue-400"
+								className="flex w-fit items-center gap-1 rounded-md bg-gradient-to-r from-slate-600 to-orange-500  py-1 pl-2 pr-1.5 text-sm font-medium text-white hover:from-slate-500 hover:to-blue-400"
 								onClick={() => SetIsEditing(true)}
 							>
 								EDIT
@@ -315,7 +315,7 @@ const TheaterListsByCinema = ({ cinemas, selectedCinemaIndex, setSelectedCinemaI
 									<button
 										title="Add theater"
 										disabled={isIncreasing}
-										className="flex grow items-center justify-center whitespace-nowrap rounded-r bg-gradient-to-r from-slate-600 to-blue-500 px-2 py-1 font-medium text-white drop-shadow-md hover:from-slate-500 hover:to-blue-400 disabled:from-slate-500 disabled:to-slate-400 md:grow-0"
+										className="flex grow items-center justify-center whitespace-nowrap rounded-r bg-gradient-to-r from-lime-600 to-lime-500 px-2 py-1 font-medium text-white drop-shadow-md hover:from-slate-500 hover:to-blue-400 disabled:from-slate-500 disabled:to-slate-400 md:grow-0"
 										type="submit"
 									>
 										{isIncreasing ? 'Processing...' : 'ADD +'}

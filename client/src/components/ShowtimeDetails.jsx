@@ -180,9 +180,10 @@ const ShowtimeDetails = ({ showDeleteBtn, showtime, fetchShowtime }) => {
 					<p className="text-sm">Theater</p>
 					<p className="text-3xl">{showtime?.theater?.number}</p>
 				</div>
-				<div className="flex w-fit grow items-center justify-center rounded-tr-lg bg-gradient-to-br from-slate-800 to-blue-700 px-4 py-0.5 text-center text-xl font-bold text-white sm:text-3xl">
+				<div className="flex w-fit grow items-center justify-center rounded-tr-lg bg-gradient-to-br from-gray-800 to-gray-700 px-4 py-0.5 text-center text-xl font-bold text-white sm:text-3xl">
 					<p className="mx-auto">{showtime?.theater?.cinema.name}</p>
 					{!showtime?.isRelease && <EyeSlashIcon className="h-8 w-8" title="Unreleased showtime" />}
+					
 				</div>
 			</div>
 			<div className="flex flex-col md:flex-row">
@@ -197,8 +198,9 @@ const ShowtimeDetails = ({ showDeleteBtn, showtime, fetchShowtime }) => {
 								<p className="mr-4 font-medium sm:text-lg">
 									length : {showtime?.movie?.length || '-'} min
 								</p>
-							)}
+							)}													
 						</div>
+						
 					</div>
 				</div>
 				<div className="flex flex-col">

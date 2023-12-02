@@ -118,7 +118,7 @@ const TheaterListsByMovie = ({
 
   
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-indigo-500 via-red-500 to-pink-500 p-4">
+    <div className="flex flex-col min-h-screen bg-white via-red-500 to-pink-500 p-4">
       <CinemaLists {...props} />
       <div className="container mx-auto mt-4 p-4 rounded-lg shadow-lg">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between bg-white p-4 rounded-md shadow-md">

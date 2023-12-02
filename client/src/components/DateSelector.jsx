@@ -38,7 +38,7 @@ const DateSelector = ({ selectedDate, setSelectedDate }) => {
         return (
             <button
                 className={`flex items-center justify-center rounded p-1 font-semibold focus:outline-none ${
-                    isThisDate ? 'bg-green-500 text-white' : 'text-black'
+                    isThisDate ? 'bg-red-500 text-white' : 'text-black'
                 } bg-gray-500 hover:bg-gray-600 shadow-md transition duration-300 ease-in-out transform hover:scale-105`}
                 onClick={() => {
                     setSelectedDate(date);

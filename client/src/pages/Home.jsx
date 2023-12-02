@@ -74,7 +74,7 @@ const Home = () => {
   useEffect(() => {
     openLocationModal(); // Fetch locations when the component mounts
   }, []);
-  
+
   const props = {
     movies,
     selectedMovieIndex,

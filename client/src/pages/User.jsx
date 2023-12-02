@@ -112,7 +112,7 @@ const User = () => {
 	}
 
 	return (
-		<div className="flex min-h-screen flex-col gap-4 bg-gradient-to-br from-slate-900 to-blue-500 pb-8 text-gray-900 sm:gap-8">
+		<div className="flex min-h-screen flex-col gap-4  pb-8 text-gray-900 sm:gap-8">
 			<Navbar />
 			<div className="mx-4 flex h-fit flex-col gap-2 rounded-lg bg-gradient-to-br from-slate-200 to-blue-100 p-4 drop-shadow-xl sm:mx-8 sm:p-6">
 				<h2 className="text-3xl font-bold text-gray-900">Users</h2>
@@ -167,14 +167,14 @@ const User = () => {
 												setTicketsUser(user.username)
 											}}
 										>
-											View {user.tickets.length} Tickets
+											 {user.tickets.length} Tickets
 											<TicketIcon className="h-6 w-6" />
 										</button>
 									</div>
 									<div className="flex gap-2 border-t-2 border-slate-200 px-2 py-1">
 										{user.role === 'user' && (
 											<button
-												className="flex w-[115px] items-center justify-center gap-1 rounded bg-gradient-to-r from-slate-600 to-blue-500 py-1 pl-2 pr-1.5 text-sm font-medium text-white hover:from-slate-500 hover:to-blue-400 disabled:from-slate-500 disabled:to-slate-400"
+												className="flex w-[115px] items-center justify-center gap-1 rounded bg-gradient-to-r from-slate-600 to-red-500 py-1 pl-2 pr-1.5 text-sm font-medium text-white hover:from-slate-500 hover:to-blue-400 disabled:from-slate-500 disabled:to-slate-400"
 												onClick={() => onUpdateUser({ id: user._id, role: 'admin' })}
 												disabled={isUpdating}
 											>
@@ -184,7 +184,7 @@ const User = () => {
 										)}
 										{user.role === 'admin' && (
 											<button
-												className="flex w-[115px] items-center justify-center gap-1 rounded bg-gradient-to-r from-slate-600 to-blue-500 py-1 pl-2 pr-1.5 text-sm font-medium text-white hover:from-slate-500 hover:to-blue-400 disabled:from-slate-500 disabled:to-slate-400"
+												className="flex w-[115px] items-center justify-center gap-1 rounded bg-gradient-to-r from-slate-600 to-orange-500 py-1 pl-2 pr-1.5 text-sm font-medium text-white hover:from-slate-500 hover:to-blue-400 disabled:from-slate-500 disabled:to-slate-400"
 												onClick={() => onUpdateUser({ id: user._id, role: 'user' })}
 												disabled={isUpdating}
 											>

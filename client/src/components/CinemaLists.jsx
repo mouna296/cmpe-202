@@ -100,12 +100,12 @@ const CinemaLists = ({
   };
 	return (
 		<>
-		  <div className="mx-4 flex h-fit flex-col gap-4 rounded-md bg-gradient-to-br from-red-200 to-red-100 p-4 text-gray-900 drop-shadow-xl sm:mx-8 sm:p-6">
+		  <div className="mx-4 flex h-fit flex-col gap-4 rounded-md  p-4 text-gray-900 drop-shadow-xl sm:mx-8 sm:p-6">
 			<div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
 			  <h2 className="text-3xl font-bold">Cinema Lists</h2>
 			  {auth.role === "admin" && (
 				<button
-				  className=" flex w-fit sm:justify-end rounded-lg bg-gradient-to-br from-red-400 to-red-400 px-2 py-1 text-white drop-shadow-md hover:from-indigo-500 hover:to-blue-400"
+				  className=" flex w-fit sm:justify-end rounded-lg bg-gradient-to-br from-green-400 to-lime-400 px-2 py-1 text-white drop-shadow-md hover:from-indigo-500 hover:to-blue-400"
 				  onClick={openLocationModal}
 				>
 				  Add New Cinema +

@@ -156,7 +156,7 @@ const Theater = ({ theaterId, movies, selectedDate, filterMovie, setSelectedDate
 					{theater.number}
 				</h3>
 				{auth.role === 'admin' && (
-					<div className="flex w-fit flex-col gap-x-3 rounded-tr-2xl bg-gradient-to-br from-slate-800 to-blue-700 px-4 py-0.5 font-semibold text-white md:flex-row md:gap-x-6 md:rounded-t-2xl md:text-lg md:font-bold">
+					<div className="flex w-fit flex-col gap-x-3 rounded-tr-2xl bg-gradient-to-br from-slate-800 to-black-900 px-4 py-0.5 font-semibold text-white md:flex-row md:gap-x-6 md:rounded-t-2xl md:text-lg md:font-bold">
 						<div className="flex items-center gap-2">
 							<ArrowsUpDownIcon className="h-5 w-5" />
 							{theater?.seatPlan?.row === 'A' ? (
@@ -250,7 +250,7 @@ const Theater = ({ theaterId, movies, selectedDate, filterMovie, setSelectedDate
 									<div className="flex flex-col items-start gap-2 lg:flex-row lg:items-end">
 										<p className="font-semibold text-right underline">Auto increase</p>
 										<label
-											className="flex items-center gap-x-2 gap-y-1 whitespace-nowrap font-semibold leading-5 lg:flex-col lg:items-start"
+											className="	"
 											title="After add, update showtime value to the movie ending time"
 										>
 											Showtime:
@@ -321,7 +321,7 @@ const Theater = ({ theaterId, movies, selectedDate, filterMovie, setSelectedDate
 							<button
 								title="Add showtime"
 								disabled={isAddingShowtime}
-								className="whitespace-nowrap rounded-md bg-gradient-to-r from-slate-600 to-blue-500 px-2 py-1 font-medium text-white drop-shadow-md hover:from-slate-500 hover:to-blue-400 disabled:from-slate-500 disabled:to-slate-400"
+								className="whitespace-nowrap rounded-md bg-gradient-to-r from-lime-600 to-lime-500 px-2 py-1 font-medium text-white drop-shadow-md hover:from-slate-500 hover:to-blue-400 disabled:from-slate-500 disabled:to-slate-400"
 								type="submit"
 							>
 								ADD +

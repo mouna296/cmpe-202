@@ -8,7 +8,7 @@ const SelectedMovie = ({
   isFetchingMoviesDone,
 }) => {
   return (
-    <div className="mx-4 flex flex-col rounded-md bg-gradient-to-br from-indigo-200 to-blue-100 p-4 text-gray-900 drop-shadow-md sm:mx-8 sm:p-6">
+    <div className="mx-4 flex flex-col rounded-md bg-white p-4 text-gray-900 drop-shadow-md sm:mx-8 sm:p-6">
       <h2 className="text-3xl font-bold">Selected Movie</h2>
       <button
         className="my-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline self-start"
@@ -21,15 +21,15 @@ const SelectedMovie = ({
       </button>
       {isFetchingMoviesDone ? (
         movies.length ? (
-          <div className="mt-1 overflow-x-auto sm:mt-3">
-            <div className="mx-2 my-3 flex w-fit gap-4">
+          <div className="flex mt-1 sm:mt-3">
+            <div className="mx-2 my-3 flex-col mx-4 mb-5 gap-4">
               {movies?.map((movie, index) => {
                 if (movies[selectedMovieIndex]?._id === movie._id) {
                   return (
                     <div
                       key={index}
                       title={movie.name}
-                      className="flex w-[108px] flex-col rounded-md bg-gradient-to-br from-indigo-600 to-blue-500 p-1 text-white drop-shadow-md hover:from-indigo-500 hover:to-blue-400 sm:w-[144px]"
+                      className="flex w-[108px] flex-col mx-4 rounded-md bg-gradient-to-br from-indigo-600 to-blue-500 p-1 text-white drop-shadow-md hover:from-indigo-500 hover:to-blue-400 sm:w-[144px]"
                       onClick={() => {
                         setSelectedMovieIndex(null);
                         sessionStorage.setItem("selectedMovieIndex", null);
@@ -46,13 +46,13 @@ const SelectedMovie = ({
                   );
                 }
               })}
-              <div className="flex flex-col sm:flex-row gap-4 p-4 bg-red-200 rounded-md">
+              <div className="flex ml-2 bg-gray-200 rounded-md">
                 <div className="flex-1 w-full">
-                  <h3 className="text-xl font-bold mb-2">
+                  {/* <h3 className="text-xl font-bold mb-2">
                     {movies[selectedMovieIndex]?.name}
                   </h3>
-                  <p className="text-gray-700 my-1"><b>Movie duration:</b> {movies[selectedMovieIndex]?.length} minutes</p>
-                  <p className="text-gray-700 my-5"><b>Genre:</b> Action, Thriller</p>
+                  <p className="text-gray-700 my-1"><b>Movie duration:</b> {movies[selectedMovieIndex]?.length} minutes</p> */}
+                  <p className="text-gray-700"><b>Genre:</b> Action, Thriller</p>
                 </div>
               </div>
             </div>
