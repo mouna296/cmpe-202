@@ -189,6 +189,50 @@ exports.getUnreleasedShowingMovies = async (req, res, next) => {
 	}
 }
 
+//@desc     GET showing movies with all unreleased showtime
+//@route    GET /movie/unreleased/showing
+//@access   Private admin
+exports.getUnreleasedShowingMoviesForUser = async (req, res, next) => {
+	try {
+		const showingShowtime = await Showtime.aggregate([
+			{ $match: { showtime: { $gte: new Date() }, isRelease: false } },
+			{
+				$lookup: {
+					from: 'movies', // Replace "movies" with the actual collection name of your movies
+					localField: 'movie',
+					foreignField: '_id',
+					as: 'movie'
+				}
+			},
+			{
+				$group: {
+					_id: '$movie',
+					count: { $sum: 1 }
+				}
+			},
+			{
+				$unwind: '$_id'
+			},
+			{
+				$replaceRoot: {
+					newRoot: {
+						$mergeObjects: ['$$ROOT', '$_id']
+					}
+				}
+			},
+			{
+				$sort: { count: -1, updatedAt: -1 }
+			}
+		])
+
+		res.status(200).json({ success: true, data: showingShowtime })
+	} catch (err) {
+		console.log(err)
+		res.status(400).json({ success: false, message: err })
+	}
+}
+
+
 //@desc     GET single movie
 //@route    GET /movie/:id
 //@access   Public

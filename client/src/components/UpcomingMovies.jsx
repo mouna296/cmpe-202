@@ -10,7 +10,7 @@ const UpcomingMovies = ({ auth }) => {
     const fetchUpcomingMovies = async () => {
       try {
         setIsFetching(true);
-        const response = await axios.get("/movie/unreleased", {
+        const response = await axios.get("movie/unreleased/showingForUser", {
           headers: {
             Authorization: `Bearer ${auth.token}`,
           },
@@ -26,6 +26,7 @@ const UpcomingMovies = ({ auth }) => {
     fetchUpcomingMovies();
   }, [auth.token]);
 
+
   return (
     <div className="mx-4 flex flex-col bg-gradient-to-br from-slate-200 to-slate-200 p-4 text-gray-900 drop-shadow-md sm:mx-8 sm:p-6">
       <h2 className="text-5xl items-center justify-center text-center font-bold">Upcoming Movies</h2>
@@ -35,11 +36,12 @@ const UpcomingMovies = ({ auth }) => {
         <div style={{
           display: 'flex',
           overflowX: 'auto',
-          gap: '10px',
+          gap: '40px',
           padding: '10px',
         }}>
           {upcomingMovies.map((movie, index) => (
             <div key={index} style={{
+              flex: '0 0 auto',
               minWidth: '160px',
               textAlign: 'center',
               boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
@@ -50,8 +52,8 @@ const UpcomingMovies = ({ auth }) => {
                 src={movie.img}
                 alt={movie.name}
                 style={{
-                  width: '100%',
-                  height: 'auto',
+                  width: '90%',
+                  height: '80%',
                   display: 'block',
                 }}
               />

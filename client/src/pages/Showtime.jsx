@@ -94,7 +94,7 @@ const Showtime = () => {
 	})
 
 	return (
-		<div className="flex min-h-screen flex-col gap-4 bg-gradient-to-br from-slate-900 to-blue-500 pb-8 sm:gap-8">
+		<div className="flex min-h-screen flex-col gap-4 bg-gradient-to-br from-slate-900 to-slate-500 pb-8 sm:gap-8">
 			<Navbar />
 			<div className="mx-4 h-fit rounded-lg bg-gradient-to-br from-slate-200 to-blue-100 p-4 drop-shadow-xl sm:mx-8 sm:p-6">
 				{showtime.showtime ? (

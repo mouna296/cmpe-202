@@ -128,7 +128,7 @@ const ShowtimeDetails = ({ showDeleteBtn, showtime, fetchShowtime }) => {
 					{!showtime.isRelease && (
 						<button
 							title="Edit cinema name"
-							className="flex w-fit items-center gap-1 rounded-md bg-gradient-to-r from-slate-600 to-blue-500  py-1 pl-2 pr-1.5 text-sm font-medium text-white hover:from-slate-500 hover:to-blue-400 disabled:from-slate-500 disabled:to-slate-400"
+							className="flex w-fit items-center gap-1 rounded-md bg-gradient-to-r from-orange-600 to-orange-500  py-1 pl-2 pr-1.5 text-sm font-medium text-white hover:from-orange-400 hover:to-red-600 disabled:from-slate-500 disabled:to-slate-400"
 							onClick={() => handleReleaseShowtime(true)}
 							disabled={isReleasingShowtime}
 						>
