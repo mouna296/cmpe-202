@@ -31,8 +31,8 @@ const Register = () => {
       });
       navigate("/");
     } catch (error) {
-      console.error(error.response.data);
-      setErrorsMessage(error.response.data);
+	console.log(error.response);
+      setErrorsMessage(error.response);
       toast.error("Error", {
         position: "top-center",
         autoClose: 2000,
